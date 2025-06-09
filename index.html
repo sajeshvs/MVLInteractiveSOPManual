@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,202 +9,151 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals (Stone, Slate, Teal) -->
-    <!-- Application Structure Plan: A single-page application with a fixed header navigation for the 8 primary policy categories, plus introduction and glossary. The main content area dynamically renders selected content. A dashboard-style intro page uses a chart for visual navigation. Individual policy pages use a two-column layout with sub-navigation on the left and detailed content (using accordions and interactive diagrams) on the right. This structure was chosen to break down dense information into manageable, explorable chunks, prioritizing user navigation and comprehension over a linear document format. -->
-    <!-- Visualization & Content Choices: Report Info: 8 main policy categories -> Goal: Compare & Navigate -> Viz: Bar Chart (Chart.js) -> Interaction: Click on a bar to navigate to that category -> Justification: Provides a high-level overview of the manual's structure and an engaging entry point. Report Info: Policy details (purpose, scope, statements) -> Goal: Inform & Organize -> Viz: Accordions (HTML/JS) -> Interaction: Click to expand/collapse -> Justification: Manages information density and prevents walls of text. Report Info: Process Flows (e.g., Incident Response) -> Goal: Explain Process -> Viz: Custom HTML/CSS Diagrams -> Interaction: Hover to highlight steps -> Justification: Replaces static diagrams with interactive, accessible HTML elements, adhering to NO SVG/Mermaid constraint. Report Info: Compliance Controls -> Goal: Relate & Inform -> Viz: Clickable Tags -> Interaction: Click to show details in a modal -> Justification: Connects policies to compliance without cluttering the main content. -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Chosen Palette: Bold Gradients (Slate, Sky, Fuchsia, Teal) -->
+    <!-- Application Structure Plan: Gen-Z friendly SPA. Mobile-first, dark mode, searchable. Onboarding modal (1-time). Home page with gradient logo & chart navigation. Main nav with Home/Glossary/Dark Mode toggle. Glossary is a searchable grid. Policy pages use a 2-col layout with icon-based, color-coded, interactive flowcharts. This structure prioritizes engagement, visual learning, and quick information retrieval over a traditional document format. -->
+    <!-- Visualization & Content Choices: Report Info: 8 main categories -> Goal: Navigate/Explore -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Click bar to navigate -> Justification: Modern, visually appealing way to represent top-level structure. Report Info: Process Flows -> Goal: Explain Process -> Viz: Custom HTML/CSS "Subway Map" Style Flow -> Interaction: Hover for tooltips, visual branching -> Justification: Transforms dense text into an engaging, easy-to-follow visual journey, using icons and color to convey meaning, per prompt. Report Info: Glossary Terms -> Goal: Organize/Find -> Viz: Searchable CSS Grid -> Interaction: Live text search filter -> Justification: Fast, modern alternative to a static list. Report Info: Compliance Controls -> Goal: Inform -> Viz: Clickable Tags -> Interaction: Opens modal with details -> Justification: Keeps UI clean while providing layered, on-demand information. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
+        :root {
+            --bg-light: #f1f5f9; /* slate-100 */
+            --bg-dark: #0f172a; /* slate-900 */
+            --text-light: #0f172a; /* slate-900 */
+            --text-dark: #e2e8f0; /* slate-200 */
+            --card-light: #ffffff;
+            --card-dark: #1e293b; /* slate-800 */
+            --border-light: #e2e8f0; /* slate-200 */
+            --border-dark: #334155; /* slate-700 */
+            --accent-gradient: linear-gradient(to right, #ec4899, #8b5cf6);
+        }
+        html.dark {
+            color-scheme: dark;
+            --bg-light: #0f172a;
+            --bg-dark: #f1f5f9;
+            --text-light: #e2e8f0;
+            --text-dark: #0f172a;
+            --card-light: #1e293b;
+            --card-dark: #ffffff;
+            --border-light: #334155;
+            --border-dark: #e2e8f0;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 50vh;
-        }
-        .flowchart {
-            position: relative;
-            padding: 2rem 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        .flowchart-node, .flowchart-decision, .flowchart-io {
-            padding: 0.75rem 1.5rem;
-            border: 1px solid #e2e8f0; /* slate-200 */
-            border-radius: 0.5rem;
-            background-color: white;
-            text-align: center;
-            min-width: 220px;
-            max-width: 280px;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-            transition: all 0.2s ease-in-out;
-        }
-        .flowchart-node:hover, .flowchart-decision:hover, .flowchart-io:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            border-color: #0d9488; /* teal-600 */
-        }
-        .flowchart-decision {
-            transform: rotate(45deg);
-            width: 150px;
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .flowchart-decision span {
-            transform: rotate(-45deg);
-            display: inline-block;
-            width: 120%;
-        }
-        .flowchart-arrow {
-            width: 1px;
-            background-color: #94a3b8; /* slate-400 */
-            height: 1.5rem;
-            position: relative;
-        }
-        .flowchart-arrow::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 5px solid #94a3b8; /* slate-400 */
-        }
-        .active-nav {
-            background-color: #ccfbf1; /* teal-100 */
-            color: #0d9488; /* teal-600 */
-            font-weight: 600;
-        }
-        .prose-custom {
-            max-width: none;
-        }
-        .prose-custom ul {
-            list-style-type: disc;
-            padding-left: 1.5rem;
-        }
-        .prose-custom li {
-            margin-top: 0.5rem;
-        }
-        .prose-custom .policy-section {
-            margin-top: 1.5rem;
-        }
-        .prose-custom .policy-section-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1e293b; /* slate-800 */
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.25rem;
-            border-bottom: 2px solid #94a3b8; /* slate-400 */
-        }
-
-        /* Logo Styles */
-        .header-logo-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .header-color-bars {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .header-bar {
-            width: 14px;
-            height: 7px;
-            border-radius: 1px;
-        }
-        .bar-1 { background-color: #9b9b9b; }
-        .bar-2 { background-color: #ba2226; }
-        .bar-3 { background-color: #8c2a8e; }
-        .bar-4 { background-color: #92b13f; }
-        .bar-5 { background-color: #e57e33; }
-        .header-logo-text {
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1;
-            background: linear-gradient(to right, #bdbdbd, #616161);
+        .gradient-text {
+            background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             color: transparent;
-            letter-spacing: -1.5px;
         }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; max-height: 60vh; }
+        .active-nav { background-image: var(--accent-gradient); color: white !important; }
+
+        /* Process Flowchart Styles */
+        .flowchart-wrapper { overflow-x: auto; padding-bottom: 1rem; display: flex; justify-content: center; }
+        .flowchart-container { display: inline-flex; flex-direction: column; gap: 0; align-items: center; min-width: max-content; padding: 1rem; }
+        .flowchart-step { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid var(--border-light); background-color: var(--card-light); width: 280px; position: relative; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0; }
+        .flowchart-step:hover { transform: scale(1.03); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1); }
+        .flowchart-icon { display: flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border-radius: 9999px; color: white; }
+        .flowchart-step-io .flowchart-icon { background-color: #3b82f6; } 
+        .flowchart-step-action .flowchart-icon { background-color: #14b8a6; } 
+        .flowchart-step-decision .flowchart-icon { background-color: #f59e0b; } 
+        .flowchart-step-start .flowchart-icon { background-color: #22c55e; }
+        .flowchart-step-end .flowchart-icon { background-color: #ef4444; } 
+        
+        .flowchart-connector { width: 2px; height: 2rem; background-color: var(--border-light); position: relative; }
+        .flowchart-connector::after { content: '▼'; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); color: var(--border-light); }
+        
+        .flowchart-branch-container { display: flex; flex-direction: column; align-items: center; position: relative; padding: 2rem 0; }
+        .flowchart-branch-container::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 2rem; background-color: var(--border-light); transform: translateX(-50%); }
+        .flowchart-step-decision { margin-bottom: 2rem; }
+        .flowchart-branch-paths { display: flex; justify-content: center; width: 100%; gap: 4rem; position: relative; }
+        .flowchart-branch-paths::before { content: ''; position: absolute; top: -2rem; left: 50%; width: calc(100% - 280px - 4rem); height: 2px; background-color: var(--border-light); transform: translateX(-50%); }
+        .flowchart-branch-path { display: flex; flex-direction: column; align-items: center; gap: 1rem; position: relative; }
+        .flowchart-branch-path::before { content: ''; position: absolute; top: -2rem; left: 50%; width: 2px; height: 2rem; background-color: var(--border-light); transform: translateX(-50%); }
+        .branch-label { position: absolute; top: -3.5rem; font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+        .branch-label.yes { background-color: #dcfce7; color: #166534; } 
+        .branch-label.no { background-color: #fee2e2; color: #991b1b; } 
+
+        .tooltip { visibility: hidden; width: max-content; max-width: 250px; background-color: #111827; color: #fff; text-align: center; border-radius: 6px; padding: 8px 12px; position: absolute; z-index: 10; bottom: 125%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s; font-size: 0.875rem; pointer-events: none;}
+        .flowchart-step:hover .tooltip { visibility: visible; opacity: 1; }
+        
+        .policy-section-divider { border-color: var(--border-light); margin-top: 1.5rem; margin-bottom: 1.5rem; }
+
+        /* Logo Styles */
+        .header-logo-container { display: flex; align-items: center; gap: 8px; }
+        .header-color-bars { display: flex; flex-direction: column; gap: 2px; }
+        .header-bar { width: 14px; height: 7px; border-radius: 1px; }
+        .bar-1 { background-color: #9b9b9b; } .bar-2 { background-color: #ba2226; } .bar-3 { background-color: #8c2a8e; } .bar-4 { background-color: #92b13f; } .bar-5 { background-color: #e57e33; }
+        .header-logo-text { font-size: 32px; font-weight: 900; line-height: 1; background: linear-gradient(to right, #bdbdbd, #616161); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; letter-spacing: -1.5px; }
     </style>
 </head>
-<body class="antialiased text-slate-800">
+<body class="antialiased">
+
+    <!-- Onboarding Modal -->
+    <div id="onboarding-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-[var(--card-light)] rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform transition-all scale-95 opacity-0">
+            <h2 class="text-3xl font-black gradient-text mb-4">Welcome to the SOP Hub!</h2>
+            <p class="text-[var(--text-light)] mb-6">This isn't your average boring manual. Explore policies, understand workflows with interactive charts, and find what you need in seconds. Ready to dive in?</p>
+            <button id="close-onboarding" class="text-white font-bold py-3 px-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 hover:opacity-90 transition-opacity">Let's Go!</button>
+        </div>
+    </div>
+    
+    <!-- Search Modal -->
+    <div id="search-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-[var(--card-light)] rounded-2xl shadow-2xl max-w-2xl w-full max-h-[70vh] flex flex-col transform transition-all scale-95 opacity-0">
+             <div class="p-4 border-b border-[var(--border-light)] flex justify-between items-center">
+                <h3 class="text-lg font-bold text-[var(--text-light)]">Search Policies & Terms</h3>
+                <button id="close-search" class="text-slate-400 hover:text-slate-600"><i class="material-icons">close</i></button>
+            </div>
+            <div class="p-4">
+                 <input id="search-input" type="text" placeholder="Type to search..." class="w-full p-3 rounded-lg bg-[var(--bg-light)] border border-[var(--border-light)] focus:ring-2 focus:ring-pink-500 outline-none">
+            </div>
+            <div id="search-results" class="p-4 overflow-y-auto space-y-2"></div>
+        </div>
+    </div>
 
     <div id="app" class="min-h-screen flex flex-col">
-        <header class="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
+        <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3 cursor-pointer" id="home-button">
                         <div class="header-logo-container">
                             <div class="header-color-bars">
-                                <div class="header-bar bar-1"></div>
-                                <div class="header-bar bar-2"></div>
-                                <div class="header-bar bar-3"></div>
-                                <div class="header-bar bar-4"></div>
-                                <div class="header-bar bar-5"></div>
+                                <div class="header-bar bar-1"></div><div class="header-bar bar-2"></div><div class="header-bar bar-3"></div><div class="header-bar bar-4"></div><div class="header-bar bar-5"></div>
                             </div>
                             <div class="header-logo-text">MVL</div>
                         </div>
-                        <h1 class="text-xl font-bold text-slate-800 hidden sm:block">Interactive SOP Manual</h1>
                     </div>
-                    <div class="hidden md:flex items-center space-x-1">
-                        <a href="#" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100" data-content="intro">Introduction</a>
-                        <div class="relative group">
-                            <button class="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 inline-flex items-center">
-                                <span>Policy Categories</span>
-                                <svg class="ml-2 -mr-1 h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                            <div class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div class="py-1" role="menu" aria-orientation="vertical">
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat1">1. Cybersecurity Controls</a>
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat2">2. Acceptable Use</a>
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat3">3. Remote Access & BYOD</a>
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat4">4. Identity & Access Mgmt</a>
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat5">5. IT Operations Lifecycle</a>
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat6">6. Backup & Recovery</a>
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat7">7. Monitoring & Enforcement</a>
-                                    <a href="#" class="main-nav-link block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem" data-content="cat8">8. Procurement & Vendor</a>
-                                </div>
-                            </div>
+                    <div class="hidden md:flex items-center space-x-2 relative">
+                        <button id="open-menu" class="px-4 py-2 rounded-full text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><i class="material-icons text-base">menu_book</i> Explore</button>
+                        <a href="#" class="main-nav-link px-4 py-2 rounded-full text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800" data-content="glossary">Glossary</a>
+                        <button id="dark-mode-toggle" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                            <i class="material-icons text-xl align-middle">light_mode</i>
+                        </button>
+                        <!-- Explore Menu Popover -->
+                        <div id="explore-menu" class="hidden absolute top-full mt-2 w-72 bg-[var(--card-light)] rounded-xl shadow-lg border border-[var(--border-light)] p-2 z-50">
+                            <!-- Popover content injected here -->
                         </div>
-                        <a href="#" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100" data-content="glossary">Glossary</a>
                     </div>
                      <div class="md:hidden">
-                        <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500">
-                            <span class="sr-only">Open main menu</span>
-                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
+                        <button id="mobile-menu-button" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                            <i class="material-icons">menu</i>
                         </button>
                     </div>
                 </div>
                  <div class="md:hidden hidden" id="mobile-menu">
                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="intro">Introduction</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat1">1. Cybersecurity</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat2">2. Acceptable Use</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat3">3. Remote Access</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat4">4. IAM</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat5">5. IT Operations</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat6">6. Backup/Recovery</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat7">7. Monitoring</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="cat8">8. Procurement</a>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100" data-content="glossary">Glossary</a>
+                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800" data-content="intro">Home</a>
+                         <div id="mobile-explore-menu" class="space-y-1"></div>
+                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800" data-content="glossary">Glossary</a>
+                         <button id="dark-mode-toggle-mobile" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                           <i class="material-icons text-xl">light_mode</i> Dark Mode
+                        </button>
                     </div>
                 </div>
             </nav>
@@ -214,29 +163,26 @@
             <!-- Dynamic content will be injected here -->
         </main>
 
-        <footer class="bg-white border-t border-slate-200">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
-                &copy; 2025 MVL | Standard Operating Procedure Manual v1.0 | Effective Date: 2025-06-09
+        <footer class="bg-transparent">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 dark:text-slate-400">
+                MVL Interactive SOP Manual v2.0 | Effective Date: 2025-06-09
             </div>
         </footer>
     </div>
-
-    <!-- Modal for Compliance Controls -->
-    <div id="compliance-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-start">
-                    <h3 id="modal-title" class="text-xl font-semibold text-slate-800">Compliance Control</h3>
-                    <button id="modal-close" class="text-slate-400 hover:text-slate-600">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                <div id="modal-body" class="mt-4 text-slate-600 prose prose-custom">
-                    <!-- Modal content will be injected here -->
-                </div>
+    
+    <!-- Floating Search Button -->
+    <button id="open-search" class="fixed bottom-6 right-6 p-4 rounded-full shadow-lg text-white bg-gradient-to-r from-pink-500 to-violet-500 hover:opacity-90 transition-opacity z-40">
+        <i class="material-icons">search</i>
+    </button>
+    
+    <!-- Compliance Modal -->
+    <div id="compliance-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-[var(--card-light)] rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+            <div class="p-4 border-b border-[var(--border-light)] flex justify-between items-center">
+                 <h3 id="modal-title" class="text-lg font-bold text-[var(--text-light)]">Compliance Control</h3>
+                 <button id="modal-close" class="text-slate-400 hover:text-slate-600"><i class="material-icons">close</i></button>
             </div>
+            <div id="modal-body" class="p-6 overflow-y-auto text-[var(--text-light)] prose prose-custom"></div>
         </div>
     </div>
 
@@ -246,10 +192,10 @@
             intro: {
                 title: "Welcome to the MVL Interactive SOP Manual",
                 overview: `
-                    <p class="text-lg text-slate-600 mb-6">This interactive application transforms MVL's Standard Operating Procedure (SOP) Manual into a dynamic, user-friendly resource. It establishes the official policies, procedures, and guidelines governing the use, management, and security of MVL's information technology (IT) resources.</p>
-                    <p class="text-slate-600 mb-6">Its purpose is to ensure operational integrity, protect corporate and client data, maintain compliance, and guide employees in the responsible use of technology. We have prioritized concise information and visual flowcharts to make policies easy to understand. Unfamiliar with a term? Visit our comprehensive <strong>Glossary</strong> from the main menu.</p>
-                    <h3 class="text-xl font-semibold text-slate-800 mb-4">Navigating the Manual</h3>
-                    <p class="text-slate-600 mb-6">Use the navigation bar above to explore the 8 main policy categories, or click on a bar in the chart below to jump directly to a category. Each section provides detailed policies and interactive diagrams to help you quickly find the information you need.</p>
+                    <p class="text-lg text-slate-600 dark:text-slate-300 mb-6">This interactive application transforms MVL's Standard Operating Procedure (SOP) Manual into a dynamic, user-friendly resource. It establishes the official policies, procedures, and guidelines governing the use, management, and security of MVL's information technology (IT) resources.</p>
+                    <p class="text-slate-600 dark:text-slate-400 mb-6">Its purpose is to ensure operational integrity, protect corporate and client data, maintain compliance, and guide employees in the responsible use of technology. We have prioritized concise information and visual flowcharts to make policies easy to understand. Unfamiliar with a term? Visit our comprehensive <strong>Glossary</strong> from the main menu.</p>
+                    <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4">Navigating the Manual</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mb-6">Use the navigation bar above to explore the 8 main policy categories, or click on a bar in the chart below to jump directly to a category. Each section provides detailed policies and interactive diagrams to help you quickly find the information you need.</p>
                     <div class="chart-container">
                         <canvas id="sopChart"></canvas>
                     </div>
@@ -257,7 +203,7 @@
             },
             glossary: {
                 title: "Consolidated Glossary of Terms",
-                overview: `<p class="text-slate-600 mb-6">This glossary provides definitions for key terms and acronyms used throughout the SOP manual to ensure a common understanding.</p>`,
+                overview: `<p class="text-slate-600 dark:text-slate-400 mb-6">This glossary provides definitions for key terms and acronyms used throughout the SOP manual to ensure a common understanding. Use the search bar to filter terms.</p>`,
                 terms: [
                     { term: "Asset", def: "Any MVL-owned hardware, software, system, service, or information." },
                     { term: "BYOD", def: "Bring Your Own Device: The practice of using a personally owned device to access company information and systems." },
@@ -282,38 +228,21 @@
                         id: "1-1",
                         title: "Cybersecurity Policy",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To establish a security-first culture and a Zero Trust model to protect MVL's information assets from all threats.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT Security Team:</strong> Oversees daily security operations, applies patches, monitors for threats, and leads incident response.</li>
-                                    <li><strong>Department Managers:</strong> Ensure their teams are trained and follow all security protocols.</li>
-                                    <li><strong>Employees:</strong> Maintain secure practices, use strong passwords, and report suspicious activity.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Critical Patches:</strong> Deployed within 48 hours.</li>
-                                    <li><strong>Incidents:</strong> Immediately escalated to the IT Security Team.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-node"><span>Assess Risks & Vulnerabilities</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Implement Protective Controls (e.g., ZTA, MFA)</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Continuously Detect & Monitor Threats</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Respond to & Contain Incidents</span></div>
-                                     <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Recover & Improve</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To establish a security-first culture and a Zero Trust model to protect MVL's information assets from all threats.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT Security Team:</strong> Oversees daily security operations, applies patches, monitors for threats, and leads incident response.</li><li><strong>Department Managers:</strong> Ensure their teams are trained and follow all security protocols.</li><li><strong>Employees:</strong> Maintain secure practices, use strong passwords, and report suspicious activity.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Critical Patches:</strong> Deployed within 48 hours.</li><li><strong>Incidents:</strong> Immediately escalated to the IT Security Team.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">policy</i></div><div>Assess Risks<span class="tooltip">Action: Regularly identify potential security weaknesses and threats. Next Step: Implement controls based on findings.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">shield</i></div><div>Implement Controls<span class="tooltip">Action: Deploy security measures like Zero Trust, MFA, and firewalls. Next Step: Continuously monitor system activity.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">radar</i></div><div>Detect & Monitor<span class="tooltip">Action: Actively monitor systems for suspicious activity. Next Step: Respond immediately to any detected incidents.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">report_problem</i></div><div>Respond & Contain<span class="tooltip">Action: Isolate and mitigate any threats that are found. Next Step: Recover systems and improve policies.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">restart_alt</i></div><div>Recover & Improve<span class="tooltip">Action: Restore systems and learn from the incident to improve future security. This is the final step in the cycle.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "RA.L2-3.11.1", title: "CMMC RA.L2-3.11.1", desc: "Periodically assess the risk to organizational operations, assets, and individuals." }]
@@ -322,38 +251,27 @@
                         id: "1-2",
                         title: "Data Protection & Classification",
                         content: `
-                             <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To ensure all MVL data, especially Controlled Unclassified Information (CUI), is properly classified, handled, and protected.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT Department:</strong> Implements technical controls like encryption and role-based access.</li>
-                                    <li><strong>Data Owners:</strong> Classify and manage data; IT ensures retention and disposal policies are followed.</li>
-                                    <li><strong>Employees:</strong> Adhere to handling protocols for all sensitive information.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Data Classification Updates:</strong> 2-3 business days.</li>
-                                    <li><strong>Access Control Adjustments:</strong> Within 1 business day.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Identify or Create Data</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Is it Sensitive or CUI?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Classify, Mark & Encrypt Data</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Store in Secure, Access-Controlled Location</span></div>
-                                     <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Monitor Access & Usage</span></div>
-                                </div>
+                             <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To ensure all MVL data, especially Controlled Unclassified Information (CUI), is properly classified, handled, and protected.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT Department:</strong> Implements technical controls like encryption and role-based access.</li><li><strong>Data Owners:</strong> Classify and manage data; IT ensures retention and disposal policies are followed.</li><li><strong>Employees:</strong> Adhere to handling protocols for all sensitive information.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Data Classification Updates:</strong> 2-3 business days.</li><li><strong>Access Control Adjustments:</strong> Within 1 business day.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">create</i></div><div>Identify Data<span class="tooltip">Action: A new piece of information is created or received. Next Step: Decide if it is sensitive.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">help_outline</i></div><div>Is it CUI?<span class="tooltip">Decision: Is the data Controlled Unclassified Information? If yes, it needs protection. If no, it is monitored as standard data.</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                            <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                                <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">enhanced_encryption</i></div><div>Classify & Encrypt<span class="tooltip">Action: Apply the correct data classification label and encrypt it. Next Step: Store it securely.</span></div></div>
+                                            </div>
+                                            <div class="flowchart-branch-path"><div class="branch-label no">No</div>
+                                                <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">inventory</i></div><div>Standard Handling<span class="tooltip">Action: Handle data according to general use policies. Next Step: Monitor access.</span></div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">visibility</i></div><div>Monitor Access<span class="tooltip">Action: Continuously monitor who accesses the data to ensure compliance. This is the final step.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                          compliance: [{ id: "AC.L2-3.1.22", title: "CMMC AC.L2-3.1.22", desc: "Control CUI in accordance with authorized use." }]
@@ -362,41 +280,31 @@
                         id: "1-3",
                         title: "Incident Response",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To ensure a swift, effective, and coordinated response to any security incident, minimizing impact and restoring normal operations.</p>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>All Employees:</strong> Must immediately report suspected incidents to the IT Help Desk.</li>
-                                    <li><strong>IT Security Team:</strong> Leads the Incident Response Team (IRT) to manage containment, eradication, and recovery.</li>
-                                    <li><strong>Executive Management:</strong> Notified of serious incidents and approves external communications.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Initial Breach Response:</strong> Within 2 business days.</li>
-                                    <li><strong>Investigation Closure:</strong> Within 7-10 business days.</li>
-                                    <li><strong>Critical Alerts:</strong> Immediate response from IT Security.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Suspected Incident Identified</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Report to IT Help Desk</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Is it a Security Incident?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Activate Incident Response Team (IRT)</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Contain, Eradicate & Recover</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Post-Incident Analysis & Report</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To ensure a swift, effective, and coordinated response to any security incident, minimizing impact and restoring normal operations.</p></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>All Employees:</strong> Must immediately report suspected incidents to the IT Help Desk.</li><li><strong>IT Security Team:</strong> Leads the Incident Response Team (IRT) to manage containment, eradication, and recovery.</li><li><strong>Executive Management:</strong> Notified of serious incidents and approves external communications.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Initial Breach Response:</strong> Within 2 business days.</li><li><strong>Investigation Closure:</strong> Within 7-10 business days.</li><li><strong>Critical Alerts:</strong> Immediate response from IT Security.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">find_in_page</i></div><div>Incident Detected<span class="tooltip">Action: An employee or system identifies a potential security incident. Next Step: Triage the report.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">support_agent</i></div><div>Triage by IT<span class="tooltip">Action: The IT Help Desk assesses the initial report. Next Step: Decide if it's a security incident.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">notification_important</i></div><div>Security Incident?<span class="tooltip">Decision: Does the event require formal incident response? If yes, activate the IRT. If no, close as a standard ticket.</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                            <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                                <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">groups</i></div><div>Activate IRT<span class="tooltip">Action: The formal Incident Response Team is activated to manage the incident. Next Step: Contain the threat.</span></div></div>
+                                            </div>
+                                            <div class="flowchart-branch-path"><div class="branch-label no">No</div>
+                                                 <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">close</i></div><div>Close ticket<span class="tooltip">The issue is resolved through standard support procedures.</span></div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">gpp_bad</i></div><div>Contain & Recover<span class="tooltip">Action: The IRT works to contain the threat and restore normal operations. Next Step: Analyze the incident.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">history_edu</i></div><div>Post-Incident Analysis<span class="tooltip">Action: Review the incident to identify lessons learned and improve security. This is the final step.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "IR.L2-3.6.1", title: "CMMC IR.L2-3.6.1", desc: "Establish an operational incident-handling capability." }]
@@ -411,38 +319,19 @@
                         id: "2-1", 
                         title: "Acceptable Use (AUP)", 
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To define employee responsibilities for the appropriate use of MVL's IT resources.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>Employees:</strong> Use systems for business purposes and avoid prohibited activities.</li>
-                                    <li><strong>IT Department:</strong> Enforces rules through system monitoring and investigates violations.</li>
-                                    <li><strong>Department Managers:</strong> Reinforce compliance and escalate violations to IT and HR.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Violation Review:</strong> Immediate escalation.</li>
-                                    <li><strong>Policy/Website Exception Request:</strong> Reviewed within 2 business days.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Employee intends to use an IT resource</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Is the use for a business purpose?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Proceed with Use</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Does it violate any policy? (e.g., illegal, harassment)</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                     <div class="flowchart-io"><span>Action is either Acceptable or a Violation</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To define employee responsibilities for the appropriate use of MVL's IT resources.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>Employees:</strong> Use systems for business purposes and avoid prohibited activities.</li><li><strong>IT Department:</strong> Enforces rules through system monitoring and investigates violations.</li><li><strong>Department Managers:</strong> Reinforce compliance and escalate violations to IT and HR.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Violation Review:</strong> Immediate escalation.</li><li><strong>Policy/Website Exception Request:</strong> Reviewed within 2 business days.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">work</i></div><div>Employee Action<span class="tooltip">An employee uses an IT resource like the internet or email.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">business_center</i></div><div>Business purpose?<span class="tooltip">Is the action directly related to job responsibilities?</span></div></div>
+                                     <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">rule</i></div><div>Violates policy?<span class="tooltip">Does the action involve illegal content, harassment, or unauthorized software?</span></div></div>
+                                     <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">task_alt</i></div><div>Outcome<span class="tooltip">The action is either deemed acceptable or a violation requiring escalation.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AT.L2-3.2.1", title: "CMMC AT.L2-3.2.1", desc: "Ensure users are aware of security risks and policies." }]
@@ -451,44 +340,31 @@
                         id: "2-2",
                         title: "Social Media & External Tools",
                         content: `
-                           <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To govern the use of social media and external web tools to mitigate security and reputational risks.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>Employees:</strong> Must not share MVL-related content or use unapproved external tools for work.</li>
-                                    <li><strong>IT Department:</strong> Blocks or restricts access to unauthorized platforms.</li>
-                                    <li><strong>Compliance & Communications:</strong> Review requests for public-facing content or new tools.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>New SaaS Tool Approval:</strong> Reviewed within 3-5 business days.</li>
-                                    <li><strong>Work-Related Social Media Content Review:</strong> 2 business days.</li>
-                                    <li><strong>Misuse/Breach Investigation:</strong> Immediate escalation.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Want to use external tool or post on social media?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Does it involve MVL data or representation?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Consult Policy & Seek Approval from IT/Compliance</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Proceed only if approved and compliant</span></div>
-                                </div>
+                           <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To govern the use of social media and external web tools to mitigate security and reputational risks.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>Employees:</strong> Must not share MVL-related content or use unapproved external tools for work.</li><li><strong>IT Department:</strong> Blocks or restricts access to unauthorized platforms.</li><li><strong>Compliance & Communications:</strong> Review requests for public-facing content or new tools.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>New SaaS Tool Approval:</strong> Reviewed within 3-5 business days.</li><li><strong>Work-Related Social Media Content Review:</strong> 2 business days.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                 <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">public</i></div><div>Plan External Use<span class="tooltip">An employee wants to use a new cloud tool or post about MVL online.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">badge</i></div><div>Involves MVL data?<span class="tooltip">Does the action involve company data, logos, or professional representation?</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                        <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                            <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">approval</i></div><div>Seek Approval<span class="tooltip">Submit a request to IT/Compliance for review.</span></div></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">verified</i></div><div>Proceed if Approved<span class="tooltip">Only use the tool or post the content after receiving formal approval.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "CM.L2-3.4.8", title: "CMMC CM.L2-3.4.8", desc: "Prohibit the installation of unauthorized software." }]
                     }
                 ] 
             },
-            cat3: { 
+             cat3: { 
                 title: "Remote Access & BYOD", 
                 overview: "This category outlines policies for securely working from outside MVL premises or using personal devices.", 
                 policies: [
@@ -496,37 +372,19 @@
                         id: "3-1", 
                         title: "Remote Access", 
                         content: `
-                           <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To define security requirements for connecting to MVL's network from any remote location.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>Employees:</strong> Request remote access and ensure devices meet security standards.</li>
-                                    <li><strong>IT Department:</strong> Configures secure access (VPN), monitors activity, and enforces device compliance.</li>
-                                    <li><strong>Managers:</strong> Approve remote work eligibility and confirm access needs.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>New Remote Access Setup:</strong> 1-2 business days.</li>
-                                    <li><strong>Access Revocation:</strong> Immediate upon risk or departure.</li>
-                                    <li><strong>Device Compliance Remediation:</strong> Within 2 business days.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Employee Requests Remote Access</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Manager Approves Business Need</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>IT Configures Secure VPN Access</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Secure Connection Established & Monitored</span></div>
-                                </div>
+                           <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To define security requirements for connecting to MVL's network from any remote location.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>Employees:</strong> Request remote access and ensure devices meet security standards.</li><li><strong>IT Department:</strong> Configures secure access (VPN), monitors activity, and enforces device compliance.</li><li><strong>Managers:</strong> Approve remote work eligibility and confirm access needs.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>New Remote Access Setup:</strong> 1-2 business days.</li><li><strong>Access Revocation:</strong> Immediate upon risk or departure.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">person</i></div><div>Request Access<span class="tooltip">The employee submits a formal request for remote network access.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">supervisor_account</i></div><div>Manager Approval<span class="tooltip">The employee's manager approves the business need for remote access.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">vpn_key</i></div><div>IT Configures VPN<span class="tooltip">The IT department sets up and configures the secure VPN connection for the user.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">lan</i></div><div>Connection Secured<span class="tooltip">The user can now securely connect to the MVL network from a remote location.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AC.L2-3.1.12", title: "CMMC AC.L2-3.1.12", desc: "Monitor and control remote access sessions." }]
@@ -535,37 +393,24 @@
                         id: "3-2",
                         title: "Bring Your Own Device (BYOD)",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To define requirements for using personal devices to access MVL data and systems.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>Employees:</strong> Obtain approval and ensure their personal devices meet security standards (encryption, passwords, etc.).</li>
-                                    <li><strong>IT Department:</strong> Reviews device compliance and installs required security configurations (e.g., MDM).</li>
-                                    <li><strong>Managers:</strong> Validate business necessity and approve usage requests.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>BYOD Approval Process:</strong> 3-5 business days.</li>
-                                    <li><strong>Device Deactivation (upon exit):</strong> Within 1 business day.</li>
-                                    <li><strong>Lost/Stolen Device Response:</strong> Immediate.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Employee requests BYOD use via form</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>IT Security Review: Meets Requirements?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>IT installs security software on device</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Access Granted & Device Registered</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To define requirements for using personal devices to access MVL data and systems.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>Employees:</strong> Obtain approval and ensure their personal devices meet security standards.</li><li><strong>IT Department:</strong> Reviews device compliance and installs required security configurations (e.g., MDM).</li><li><strong>Managers:</strong> Validate business necessity and approve usage requests.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>BYOD Approval Process:</strong> 3-5 business days.</li><li><strong>Lost/Stolen Device Response:</strong> Immediate.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">phone_iphone</i></div><div>Request BYOD Use<span class="tooltip">The employee submits a formal request to use their personal device for work.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                     <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">security</i></div><div>IT Security Review<span class="tooltip">IT checks if the device meets security criteria (e.g., OS version, encryption).</span></div></div>
+                                         <div class="flowchart-branch-paths">
+                                        <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                            <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">phonelink_setup</i></div><div>Install MDM<span class="tooltip">IT installs Mobile Device Management software to enforce security policies.</span></div></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">lock_open</i></div><div>Access Granted<span class="tooltip">The user is granted access to company resources on their personal device.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AC.L2-3.1.17", title: "CMMC AC.L2-3.1.17", desc: "Protect CUI on mobile devices." }]
@@ -580,37 +425,19 @@
                         id: "4-1",
                         title: "User Access Lifecycle",
                         content: `
-                             <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To ensure timely and appropriate management of user access throughout their employment lifecycle (Joiner, Mover, Leaver).</p>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>HR:</strong> Coordinates start dates, role changes, and departures, initiating requests to IT.</li>
-                                    <li><strong>IT Department:</strong> Creates, modifies, or disables user accounts and access based on requests.</li>
-                                    <li><strong>Managers:</strong> Confirm the systems and access levels needed for their team members.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>New Hire Account Setup:</strong> 1-2 business days before start date.</li>
-                                    <li><strong>Role Change (Mover) Access Update:</strong> Within 2 business days of notification.</li>
-                                    <li><strong>Departure Account Deactivation:</strong> Same day as departure.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>HR Initiates Action (Hire, Move, Terminate)</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Manager Submits/Approves Access Request</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>IT Provisions, Modifies, or Revokes Access</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Access Status Updated & Verified</span></div>
-                                </div>
+                             <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To ensure timely and appropriate management of user access throughout their employment lifecycle (Joiner, Mover, Leaver).</p></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>HR:</strong> Coordinates start dates, role changes, and departures, initiating requests to IT.</li><li><strong>IT Department:</strong> Creates, modifies, or disables user accounts and access based on requests.</li><li><strong>Managers:</strong> Confirm the systems and access levels needed for their team members.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>New Hire Account Setup:</strong> 1-2 business days before start date.</li><li><strong>Role Change Access Update:</strong> Within 2 business days.</li><li><strong>Departure Account Deactivation:</strong> Same day as departure.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">person_add</i></div><div>HR Initiates Action<span class="tooltip">HR action (hire, move, or terminate) triggers the process.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">fact_check</i></div><div>Manager Approves<span class="tooltip">The manager confirms the required access levels for the role.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">engineering</i></div><div>IT Provisions Access<span class="tooltip">IT creates, modifies, or revokes system access as requested.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">how_to_reg</i></div><div>Access Verified<span class="tooltip">The access change is confirmed and the process is complete.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AC.L2-3.1.2", title: "CMMC AC.L2-3.1.2", desc: "Control internal system access (creation, modification, disabling, and removal)." }]
@@ -619,36 +446,24 @@
                         id: "4-2",
                         title: "Privileged & Shared Accounts",
                         content: `
-                             <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To strictly control, monitor, and audit the use of all privileged (e.g., administrator) and shared accounts.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT Department:</strong> Manages privileged accounts, maintains audit logs, and restricts access.</li>
-                                    <li><strong>Privileged Users:</strong> Must use a separate admin account and follow dual-authentication protocols.</li>
-                                    <li><strong>Compliance:</strong> Reviews privileged access logs during audits.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Privileged Account Creation:</strong> 2-3 business days.</li>
-                                    <li><strong>Privileged Access Audit Review:</strong> Monthly.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Need for Privileged Access Identified</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Is access justified and approved by Manager & IT?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Use dedicated admin account with MFA</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>All actions are logged and audited</span></div>
-                                </div>
+                             <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To strictly control, monitor, and audit the use of all privileged (e.g., administrator) and shared accounts.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT Department:</strong> Manages privileged accounts, maintains audit logs, and restricts access.</li><li><strong>Privileged Users:</strong> Must use a separate admin account and follow dual-authentication protocols.</li><li><strong>Compliance:</strong> Reviews privileged access logs during audits.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Privileged Account Creation:</strong> 2-3 business days.</li><li><strong>Privileged Access Audit Review:</strong> Monthly.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">admin_panel_settings</i></div><div>Need Identified<span class="tooltip">A requirement for administrative access is identified for a specific task.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">checklist</i></div><div>Approved?<span class="tooltip">The request is reviewed for justification by management and IT security.</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                        <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                            <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">password</i></div><div>Use MFA<span class="tooltip">Access is granted using a dedicated admin account with multi-factor authentication.</span></div></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">plagiarism</i></div><div>Log & Audit<span class="tooltip">All actions performed with the privileged account are logged for security review.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AC.L2-3.1.5", title: "CMMC AC.L2-3.1.5", desc: "Employ the principle of least privilege." }]
@@ -657,38 +472,28 @@
                         id: "4-3",
                         title: "Access Review",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To periodically review user access rights to ensure they remain appropriate and necessary.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT Department:</strong> Conducts quarterly reviews of active accounts and flags dormant users.</li>
-                                    <li><strong>Department Managers:</strong> Validate and certify access rights for all team members during reviews.</li>
-                                    <li><strong>Compliance:</strong> Audits the account recertification records.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Quarterly Access Certification:</strong> Completed within 10 business days.</li>
-                                    <li><strong>Dormant Account Deactivation:</strong> Automatic after 30 days of inactivity.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Quarterly Access Review Cycle Begins</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>IT generates access reports for each department</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Managers review and certify team access</span></div>
-                                     <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Is any access excessive or unnecessary?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>IT revokes unneeded access & closes review</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To periodically review user access rights to ensure they remain appropriate and necessary.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT Department:</strong> Conducts quarterly reviews of active accounts and flags dormant users.</li><li><strong>Department Managers:</strong> Validate and certify access rights for all team members during reviews.</li><li><strong>Compliance:</strong> Audits the account recertification records.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Quarterly Access Certification:</strong> Completed within 10 business days.</li><li><strong>Dormant Account Deactivation:</strong> Automatic after 30 days.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                 <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">event</i></div><div>Review Cycle Begins<span class="tooltip">The quarterly user access review process is initiated.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">summarize</i></div><div>IT Generates Reports<span class="tooltip">IT provides a list of users and their current access permissions to each manager.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">rate_review</i></div><div>Managers Certify<span class="tooltip">Managers review the reports for their teams and approve or deny continued access.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                     <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">person_remove</i></div><div>Access excessive?<span class="tooltip">Is any user's access no longer required for their job role?</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                        <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                            <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">no_accounts</i></div><div>IT Revokes Access<span class="tooltip">IT removes the unnecessary permissions as certified by the manager.</span></div></div>
+                                        </div>
+                                        </div>
+                                     </div>
+                                     <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">done_all</i></div><div>Review Closed<span class="tooltip">The review cycle is documented and officially closed.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AC.L2-3.1.4", title: "CMMC AC.L2-3.1.4", desc: "Periodically review and update access permissions." }]
@@ -703,39 +508,21 @@
                         id: "5-1",
                         title: "IT Services & Support",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To detail how users request assistance, receive help, and escalate unresolved technical issues.</p>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>End Users:</strong> Submit requests via the designated help desk platform (ITSM).</li>
-                                    <li><strong>IT Support Technicians:</strong> Triage tickets, provide support, and escalate complex issues.</li>
-                                    <li><strong>IT Manager:</strong> Oversees workload, service level compliance, and support quality.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Priority 1 (Critical Outage):</strong> Immediate response.</li>
-                                    <li><strong>Priority 2 (Major Disruption):</strong> Resolved within 2-3 business days.</li>
-                                    <li><strong>Priority 3 (General Help):</strong> Resolved within 3-5 business days.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>User Experiences Issue / Has Request</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Submit Ticket via ITSM Portal</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>IT Triage: Determine Priority</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Assign to Technician & Resolve</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>User Confirms Resolution & Ticket is Closed</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To detail how users request assistance, receive help, and escalate unresolved technical issues.</p></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>End Users:</strong> Submit requests via the designated help desk platform (ITSM).</li><li><strong>IT Support Technicians:</strong> Triage tickets, provide support, and escalate complex issues.</li><li><strong>IT Manager:</strong> Oversees workload, service level compliance, and support quality.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Priority 1 (Critical Outage):</strong> Immediate response.</li><li><strong>Priority 2 (Major Disruption):</strong> Resolved within 2-3 business days.</li><li><strong>Priority 3 (General Help):</strong> Resolved within 3-5 business days.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">live_help</i></div><div>User Has Issue<span class="tooltip">An employee needs IT assistance or has a request for a new service.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">confirmation_number</i></div><div>Submit Ticket<span class="tooltip">The user submits a detailed ticket through the IT Service Management portal.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">priority_high</i></div><div>Triage Priority<span class="tooltip">IT support assesses the ticket's urgency and impact to assign a priority level.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">build</i></div><div>Assign & Resolve<span class="tooltip">The ticket is assigned to a technician who works to resolve the issue.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">thumb_up</i></div><div>Ticket Closed<span class="tooltip">The user confirms the issue is resolved, and the ticket is formally closed.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "IR.L2-3.6.1", title: "CMMC IR.L2-3.6.1", desc: "Establish an operational incident-handling capability." }]
@@ -744,38 +531,26 @@
                         id: "5-2",
                         title: "IT Change Management",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To control how MVL applies updates, patches, and system modifications to minimize disruption and ensure accountability.</p>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT Department:</strong> Logs, evaluates, tests, and schedules changes.</li>
-                                    <li><strong>Requesting Departments:</strong> Submit change requests with business justification.</li>
-                                    <li><strong>Executive Management:</strong> Reviews impact, risk, and downtime for major changes before approval.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Standard Change Review:</strong> Within 3-5 business days.</li>
-                                    <li><strong>Emergency Change:</strong> Implemented immediately with post-event documentation.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Change Request Submitted via ITSM</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Change Advisory Board (CAB) Review</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Risk Assessment & Planning Approved?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Implement & Test Change</span></div>
-                                     <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Document & Close Change Request</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To control how MVL applies updates, patches, and system modifications to minimize disruption and ensure accountability.</p></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT Department:</strong> Logs, evaluates, tests, and schedules changes.</li><li><strong>Requesting Departments:</strong> Submit change requests with business justification.</li><li><strong>Executive Management:</strong> Reviews impact, risk, and downtime for major changes before approval.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Standard Change Review:</strong> Within 3-5 business days.</li><li><strong>Emergency Change:</strong> Implemented immediately with post-event documentation.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">edit_note</i></div><div>Change Request<span class="tooltip">A formal request for a change to a system is submitted via ITSM.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">group_work</i></div><div>CAB Review<span class="tooltip">The Change Advisory Board reviews the request for potential impact and conflicts.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                     <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">science</i></div><div>Approved?<span class="tooltip">The CAB decides whether to approve, deny, or request more information for the change.</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                        <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                            <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">construction</i></div><div>Implement Change<span class="tooltip">The approved change is scheduled and implemented in the production environment.</span></div></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                     <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">archive</i></div><div>Close Request<span class="tooltip">The change is documented, and the request ticket is formally closed.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "CM.L2-3.4.2", title: "CMMC CM.L2-3.4.2", desc: "Track, review, approve/disapprove, and log changes." }]
@@ -790,39 +565,21 @@
                         id: "6-1",
                         title: "Data Backup",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To ensure that critical MVL data is regularly backed up, secured, and can be restored in a timely manner.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>Backup Administrators (IT):</strong> Schedule backups, verify completion, and manage storage solutions.</li>
-                                    <li><strong>Data Owners:</strong> Confirm critical business data is included in backup scope.</li>
-                                    <li><strong>Compliance:</strong> Reviews retention rules and encryption methods for adherence.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Daily Backups:</strong> Completed nightly by 2:00 a.m.</li>
-                                    <li><strong>User-Level File Recovery:</strong> 1-2 business days.</li>
-                                    <li><strong>Recovery Point Objective (RPO):</strong> Maximum 24 hours of data loss.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Automated Daily & Weekly Backup Jobs Run</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Data is Encrypted and Stored On-site & Off-site</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Backup Verification Successful?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Quarterly Restoration Test Performed</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Test Results Documented</span></div>
-                                </div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To ensure that critical MVL data is regularly backed up, secured, and can be restored in a timely manner.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>Backup Administrators (IT):</strong> Schedule backups, verify completion, and manage storage solutions.</li><li><strong>Data Owners:</strong> Confirm critical business data is included in backup scope.</li><li><strong>Compliance:</strong> Reviews retention rules and encryption methods for adherence.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Daily Backups:</strong> Completed nightly by 2:00 a.m.</li><li><strong>User-Level File Recovery:</strong> 1-2 business days.</li><li><strong>Recovery Point Objective (RPO):</strong> Maximum 24 hours of data loss.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">schedule</i></div><div>Automated Jobs Run<span class="tooltip">Daily and weekly backup jobs are executed automatically during off-hours.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">cloud_upload</i></div><div>Encrypt & Store<span class="tooltip">Data is encrypted and securely copied to both on-site and off-site storage locations.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">verified_user</i></div><div>Verification OK?<span class="tooltip">The system verifies the integrity and completion of the backup job.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">settings_backup_restore</i></div><div>Quarterly Test<span class="tooltip">A sample of data is restored to a test environment to ensure backups are viable.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">assignment_turned_in</i></div><div>Document Results<span class="tooltip">The results of the restoration test are documented for compliance and audit purposes.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "RE.L2-3.10.3", title: "CMMC RE.L2-3.10.3", desc: "Regularly perform and test data back-ups." }]
@@ -831,40 +588,19 @@
                         id: "6-2",
                         title: "Disaster Recovery (DR) & Business Continuity (BCP)",
                         content: `
-                             <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To provide a plan for restoring IT systems (DR) and continuing essential business functions (BCP) during and after a major disruption.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT DR Team:</strong> Activates recovery plan, restores critical infrastructure, and verifies data integrity.</li>
-                                    <li><strong>Business Continuity Team:</strong> Maintains process maps, contact lists, and contingency workarounds.</li>
-                                    <li><strong>All Departments:</strong> Designate critical functions and participate in annual tests.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Recovery Time Objective (RTO) - Priority 1:</strong> 8 hours.</li>
-                                    <li><strong>Recovery Time Objective (RTO) - Priority 2:</strong> 24-48 hours.</li>
-                                    <li><strong>Crisis Communication Rollout:</strong> Within 2 hours of declaration.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Disruption Occurs (e.g., Outage, Cyberattack)</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Activate DR/BCP Plans</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flex flex-col md:flex-row gap-4">
-                                        <div class="flowchart-node"><strong>Business Continuity Plan (BCP)</strong><br/><small>Focus: Keep Business Running with workarounds</small></div>
-                                        <div class="flowchart-node"><strong>Disaster Recovery Plan (DR)</strong><br/><small>Focus: Restore IT Systems from backups</small></div>
-                                    </div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Return to Normal Operations</span></div>
-                                </div>
+                             <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To provide a plan for restoring IT systems (DR) and continuing essential business functions (BCP) during and after a major disruption.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT DR Team:</strong> Activates recovery plan, restores critical infrastructure, and verifies data integrity.</li><li><strong>Business Continuity Team:</strong> Maintains process maps, contact lists, and contingency workarounds.</li><li><strong>All Departments:</strong> Designate critical functions and participate in annual tests.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>RTO - Priority 1:</strong> 8 hours.</li><li><strong>RTO - Priority 2:</strong> 24-48 hours.</li><li><strong>Crisis Communication:</strong> Within 2 hours of declaration.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                 <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">error</i></div><div>Disruption Occurs<span class="tooltip">A major event like a natural disaster or cyberattack impacts operations.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">campaign</i></div><div>Activate Plans<span class="tooltip">Management declares a disaster, activating the DR and BCP plans.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">sync_alt</i></div><div>Execute BCP & DR<span class="tooltip">Teams execute their respective plans: IT restores systems (DR) while business units use workarounds (BCP).</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">autorenew</i></div><div>Return to Normal<span class="tooltip">Once systems are restored, normal business operations resume.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "IR.L2-3.6.2", title: "CMMC IR.L2-3.6.2", desc: "Track, document, and report incidents, including testing response capabilities." }]
@@ -879,38 +615,26 @@
                         id: "7-1",
                         title: "System Monitoring & Auditing",
                         content: `
-                           <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To track and analyze user activity, system performance, and security events to detect anomalies, misuse, or breaches.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT Security Team:</strong> Maintains audit logs, monitors privileged accounts, and investigates automated alerts from the SIEM.</li>
-                                    <li><strong>Compliance Team:</strong> Conducts quarterly log reviews and investigates suspicious events independently.</li>
-                                    <li><strong>Third-Party Auditors:</strong> Review logs during formal compliance assessments.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Log Review Frequency:</strong> Weekly (IT), Quarterly (Compliance).</li>
-                                    <li><strong>Critical Incident Alert Response:</strong> Immediate.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>System & User Activity Occurs</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Logs are Generated and Sent to SIEM</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-decision"><span>Automated Alert Triggered?</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>IT Security Investigates Immediately</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Quarterly Compliance Review of All Logs</span></div>
-                                </div>
+                           <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To track and analyze user activity, system performance, and security events to detect anomalies, misuse, or breaches.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT Security Team:</strong> Maintains audit logs, monitors privileged accounts, and investigates automated alerts from the SIEM.</li><li><strong>Compliance Team:</strong> Conducts quarterly log reviews and investigates suspicious events independently.</li><li><strong>Third-Party Auditors:</strong> Review logs during formal compliance assessments.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Log Review Frequency:</strong> Weekly (IT), Quarterly (Compliance).</li><li><strong>Critical Incident Alert Response:</strong> Immediate.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">computer</i></div><div>Activity Occurs<span class="tooltip">A user logs in, accesses a file, or performs any system action.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">send_to_mobile</i></div><div>Logs Sent to SIEM<span class="tooltip">The activity log is sent to the central Security Information and Event Management system.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                     <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">emergency</i></div><div>Alert Triggered?<span class="tooltip">The SIEM analyzes the log and decides if it matches a high-risk pattern.</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                        <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                            <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">health_and_safety</i></div><div>Investigate<span class="tooltip">The IT Security team immediately investigates the high-risk alert.</span></div></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">manage_search</i></div><div>Quarterly Review<span class="tooltip">The Compliance team reviews all logs quarterly for patterns and policy adherence.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AU.L2-3.3.1", title: "CMMC AU.L2-3.3.1", desc: "Create and retain individual audit records of system access and activity." }]
@@ -919,37 +643,21 @@
                         id: "7-2",
                         title: "Policy Enforcement & Escalation",
                         content: `
-                            <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To define the consequences for violating IT policies and the process for escalation.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>Supervisors:</strong> Report suspected noncompliance or unsafe behavior from their team members.</li>
-                                    <li><strong>HR & Compliance:</strong> Lead internal investigations and enforce disciplinary steps.</li>
-                                    <li><strong>Legal:</strong> Reviews serious breaches that may involve contracts or external obligations.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Initial Breach Response:</strong> Within 2 business days.</li>
-                                    <li><strong>Investigation Closure:</strong> Within 7-10 business days.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                             <div class="flowchart">
-                                <div class="flowchart-io"><span>Policy Violation Detected/Reported</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Initial Investigation by Manager/IT</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-decision"><span>Severity Assessed (Minor, Moderate, or Severe)</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Progressive Disciplinary Action with HR</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Case Documented & Closed</span></div>
+                            <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To define the consequences for violating IT policies and the process for escalation.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>Supervisors:</strong> Report suspected noncompliance or unsafe behavior from their team members.</li><li><strong>HR & Compliance:</strong> Lead internal investigations and enforce disciplinary steps.</li><li><strong>Legal:</strong> Reviews serious breaches that may involve contracts or external obligations.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Initial Breach Response:</strong> Within 2 business days.</li><li><strong>Investigation Closure:</strong> Within 7-10 business days.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                 <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">flag</i></div><div>Violation Detected<span class="tooltip">A potential policy violation is reported or detected through monitoring.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">gavel</i></div><div>Initial Investigation<span class="tooltip">The user's manager and/or IT conduct an initial fact-finding.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">balance</i></div><div>Assess Severity<span class="tooltip">HR and Compliance assess the severity and intent of the violation.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">folder_shared</i></div><div>Disciplinary Action<span class="tooltip">Appropriate disciplinary action is taken, following a progressive model.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">check_circle</i></div><div>Case Closed<span class="tooltip">The case is formally documented and closed.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "AT.L2-3.2.1", title: "CMMC AT.L2-3.2.1", desc: "Ensure users are aware of policies and the consequences of non-compliance." }]
@@ -964,38 +672,26 @@
                         id: "8-1",
                         title: "Procurement & Vendor Approval",
                         content: `
-                           <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To ensure all IT-related procurements and third-party vendors are approved, secure, and provide value to MVL.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>Department Heads:</strong> Initiate purchase requests based on operational needs.</li>
-                                    <li><strong>IT & Procurement:</strong> Validate technical specs, check compatibility, and assess vendor risk.</li>
-                                    <li><strong>Finance & Executive Management:</strong> Approve purchases over pre-set thresholds.</li>
-                                    <li><strong>Legal & Compliance:</strong> Review contracts and vet vendors handling sensitive data.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Standard Asset Procurement:</strong> 3-7 business days.</li>
-                                    <li><strong>New Tool/Vendor Vetting & Approval:</strong> 5-10 business days.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                             <div class="flowchart">
-                                <div class="flowchart-io"><span>Employee/Manager Submits Purchase Requisition</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-decision"><span>Is this a new Vendor or SaaS tool?</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>IT Security & Legal Vetting</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Procurement & Finance Review</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Approved & Purchased</span></div>
+                           <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To ensure all IT-related procurements and third-party vendors are approved, secure, and provide value to MVL.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>Department Heads:</strong> Initiate purchase requests based on operational needs.</li><li><strong>IT & Procurement:</strong> Validate technical specs, check compatibility, and assess vendor risk.</li><li><strong>Finance & Executive Management:</strong> Approve purchases over pre-set thresholds.</li><li><strong>Legal & Compliance:</strong> Review contracts and vet vendors handling sensitive data.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Standard Asset Procurement:</strong> 3-7 business days.</li><li><strong>New Tool/Vendor Vetting & Approval:</strong> 5-10 business days.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">shopping_cart</i></div><div>Submit Purchase Req<span class="tooltip">An employee or manager submits a formal purchase requisition for a new tool or service.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                     <div class="flowchart-branch-container">
+                                        <div class="flowchart-step flowchart-step-decision"><div class="flowchart-icon"><i class="material-icons">business</i></div><div>New Vendor?<span class="tooltip">Is this a request for a new vendor or SaaS tool not previously approved?</span></div></div>
+                                        <div class="flowchart-branch-paths">
+                                        <div class="flowchart-branch-path"><div class="branch-label yes">Yes</div>
+                                            <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">domain_verification</i></div><div>Security Vetting<span class="tooltip">IT Security and Legal teams review the vendor for compliance and data security risks.</span></div></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">request_quote</i></div><div>Finance Review<span class="tooltip">The Procurement and Finance teams review the cost and approve the budget.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">receipt_long</i></div><div>Approved & Purchased<span class="tooltip">Once all checks are passed, the item is purchased and onboarded.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "SA.L2-3.12.3", title: "CMMC SA.L2-3.12.3", desc: "Manage the security of systems and services that are outsourced." }]
@@ -1004,39 +700,21 @@
                         id: "8-2",
                         title: "Asset Management & Lifecycle",
                         content: `
-                           <div class="policy-section">
-                                <div class="policy-section-title">Purpose</div>
-                                <p>To track and manage all IT assets throughout their lifecycle, from procurement to disposal, ensuring compliance and security.</p>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Who Does What</div>
-                                <ul>
-                                    <li><strong>IT Asset Coordinator:</strong> Tags, registers, and maintains records of all devices and software licenses.</li>
-                                    <li><strong>Managers:</strong> Ensure assets are used properly and returned when staff exit.</li>
-                                    <li><strong>Finance:</strong> Reconciles inventory with depreciation and budgeting.</li>
-                                </ul>
-                            </div>
-                             <div class="policy-section">
-                                <div class="policy-section-title">TATs</div>
-                                <ul>
-                                    <li><strong>Asset Issuance (New Hire):</strong> Within 2 business days of start date.</li>
-                                    <li><strong>Asset Return/Closeout (Departure):</strong> Within 3 business days of offboarding.</li>
-                                    <li><strong>Lifecycle Audit:</strong> Annually.</li>
-                                </ul>
-                            </div>
-                            <div class="policy-section">
-                                <div class="policy-section-title">Process Flow</div>
-                                <div class="flowchart">
-                                    <div class="flowchart-io"><span>Asset Procured (Hardware or Software)</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Register in Asset Management System (ITMS)</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Deploy to User/System</span></div>
-                                    <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-node"><span>Maintain/Update Through Lifecycle</span></div>
-                                     <div class="flowchart-arrow"></div>
-                                    <div class="flowchart-io"><span>Retire & Securely Dispose/Wipe Data</span></div>
-                                </div>
+                           <div class="policy-section"><div class="policy-section-title">Purpose</div><p>To track and manage all IT assets throughout their lifecycle, from procurement to disposal, ensuring compliance and security.</p></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Who Does What</div><ul><li><strong>IT Asset Coordinator:</strong> Tags, registers, and maintains records of all devices and software licenses.</li><li><strong>Managers:</strong> Ensure assets are used properly and returned when staff exit.</li><li><strong>Finance:</strong> Reconciles inventory with depreciation and budgeting.</li></ul></div> <hr class="policy-section-divider"/>
+                             <div class="policy-section"><div class="policy-section-title">TATs</div><ul><li><strong>Asset Issuance (New Hire):</strong> Within 2 business days of start date.</li><li><strong>Asset Return/Closeout (Departure):</strong> Within 3 business days of offboarding.</li><li><strong>Lifecycle Audit:</strong> Annually.</li></ul></div> <hr class="policy-section-divider"/>
+                            <div class="policy-section"><div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart-wrapper"><div class="flowchart-container">
+                                    <div class="flowchart-step flowchart-step-start"><div class="flowchart-icon"><i class="material-icons">add_shopping_cart</i></div><div>Asset Procured<span class="tooltip">A new piece of hardware or software license is purchased.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">inventory_2</i></div><div>Register in ITMS<span class="tooltip">The asset is logged in the IT Asset Management System with a unique ID.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">output</i></div><div>Deploy to User<span class="tooltip">The asset is assigned and physically deployed to a user or system.</span></div></div>
+                                    <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-action"><div class="flowchart-icon"><i class="material-icons">sync</i></div><div>Maintain/Update<span class="tooltip">The asset is maintained, patched, and updated throughout its operational life.</span></div></div>
+                                     <div class="flowchart-connector"></div>
+                                    <div class="flowchart-step flowchart-step-end"><div class="flowchart-icon"><i class="material-icons">delete_forever</i></div><div>Retire & Dispose<span class="tooltip">At end-of-life, the asset is securely wiped of data and disposed of or recycled.</span></div></div>
+                                </div></div>
                             </div>
                         `,
                         compliance: [{ id: "CM.L2-3.4.1", desc: "Establish and maintain baseline configurations and inventories of organizational systems.", title: "CMMC CM.L2-3.4.1" }]
@@ -1050,9 +728,7 @@
             .flatMap(cat => cat.policies)
             .flatMap(p => p.compliance || [])
             .reduce((acc, curr) => {
-                if(curr && curr.id) {
-                   acc[curr.id] = curr;
-                }
+                if(curr && curr.id) { acc[curr.id] = curr; }
                 return acc;
             }, {});
 
@@ -1064,11 +740,184 @@
             const modalClose = document.getElementById('modal-close');
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
+            const homeButton = document.getElementById('home-button');
+            const onboardingModal = document.getElementById('onboarding-modal');
+            const closeOnboardingBtn = document.getElementById('close-onboarding');
+            const searchModal = document.getElementById('search-modal');
+            const openSearchBtn = document.getElementById('open-search');
+            const closeSearchBtn = document.getElementById('close-search');
+            const searchInput = document.getElementById('search-input');
+            const searchResultsContainer = document.getElementById('search-results');
+            const menuPopover = document.getElementById('explore-menu');
+            const openMenuBtn = document.getElementById('open-menu');
+            const mobileExploreMenu = document.getElementById('mobile-explore-menu');
 
-            let appState = {
-                category: 'intro',
-                policy: null,
+            let appState = { category: 'intro', policy: null };
+
+            // Dark Mode
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeToggleMobile = document.getElementById('dark-mode-toggle-mobile');
+            const toggleIcons = () => {
+                 const isDark = document.documentElement.classList.contains('dark');
+                 darkModeToggle.innerHTML = `<i class="material-icons text-xl align-middle">${isDark ? 'dark_mode' : 'light_mode'}</i>`;
+                 darkModeToggleMobile.innerHTML = `<i class="material-icons text-xl">${isDark ? 'dark_mode' : 'light_mode'}</i> Dark Mode`;
             };
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.documentElement.classList.add('dark');
+            }
+            toggleIcons();
+            const setDarkMode = () => {
+                document.documentElement.classList.toggle('dark');
+                if (document.documentElement.classList.contains('dark')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+                toggleIcons();
+                renderContent(); // Re-render to update chart colors
+            };
+            darkModeToggle.addEventListener('click', setDarkMode);
+            darkModeToggleMobile.addEventListener('click', setDarkMode);
+            
+            // Onboarding
+            if (localStorage.getItem('onboardingComplete') !== 'true') {
+                onboardingModal.classList.remove('hidden');
+                onboardingModal.classList.add('flex');
+                setTimeout(() => { onboardingModal.querySelector('div').classList.remove('scale-95', 'opacity-0'); }, 50);
+            }
+            closeOnboardingBtn.addEventListener('click', () => {
+                onboardingModal.querySelector('div').classList.add('scale-95', 'opacity-0');
+                setTimeout(() => { 
+                    onboardingModal.classList.add('hidden');
+                    onboardingModal.classList.remove('flex');
+                    localStorage.setItem('onboardingComplete', 'true');
+                }, 300);
+            });
+            
+            // Explore Menu
+            const buildMenu = (container) => {
+                 container.innerHTML = Object.keys(sopData).filter(k => k.startsWith('cat')).map(catKey => {
+                    const category = sopData[catKey];
+                    const policyLinks = category.policies.map(p => 
+                        `<li><a href="#" class="menu-policy-link block text-slate-500 dark:text-slate-400 hover:text-pink-500 dark:hover:text-pink-400 text-sm py-1" data-category="${catKey}" data-policy="${p.id}">${p.title}</a></li>`
+                    ).join('');
+                    return `
+                        <div>
+                            <details class="group">
+                                <summary class="flex justify-between items-center cursor-pointer list-none p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                                    <h3 class="text-slate-700 dark:text-slate-200 font-semibold text-sm">${category.title}</h3>
+                                    <span class="text-slate-500 group-open:rotate-180 transition-transform">
+                                        <i class="material-icons text-lg">expand_more</i>
+                                    </span>
+                                </summary>
+                                <ul class="space-y-1 pt-2 pl-6">${policyLinks}</ul>
+                            </details>
+                        </div>
+                    `;
+                }).join('');
+            };
+
+            openMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuPopover.classList.toggle('hidden');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!menuPopover.contains(e.target) && !openMenuBtn.contains(e.target)) {
+                    menuPopover.classList.add('hidden');
+                }
+            });
+
+            const handleMenuClick = (e) => {
+                 if (e.target.matches('.menu-policy-link')) {
+                    e.preventDefault();
+                    appState.category = e.target.dataset.category;
+                    appState.policy = e.target.dataset.policy;
+                    renderContent();
+                    menuPopover.classList.add('hidden');
+                    mobileMenu.classList.add('hidden');
+                 }
+            };
+            menuPopover.addEventListener('click', handleMenuClick);
+            mobileExploreMenu.addEventListener('click', handleMenuClick);
+
+
+            // Search
+            const allSearchableItems = [
+                ...Object.values(sopData).flatMap(cat => (cat.policies || []).map(p => ({...p, type: 'Policy', category: cat.title}))),
+                ...sopData.glossary.terms.map(t => ({...t, title: t.term, content: t.def, type: 'Glossary Term'}))
+            ];
+
+            const openSearch = () => {
+                searchModal.classList.remove('hidden');
+                searchModal.classList.add('flex');
+                setTimeout(() => { 
+                    searchModal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+                    searchInput.focus();
+                }, 50);
+            }
+            
+            const closeSearch = () => {
+                 searchModal.querySelector('div').classList.add('scale-95', 'opacity-0');
+                 setTimeout(() => { 
+                     searchModal.classList.add('hidden');
+                     searchModal.classList.remove('flex');
+                 }, 300);
+            }
+
+            openSearchBtn.addEventListener('click', openSearch);
+            closeSearchBtn.addEventListener('click', closeSearch);
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                if (query.length < 2) {
+                    searchResultsContainer.innerHTML = '';
+                    return;
+                }
+                const results = allSearchableItems.filter(item => 
+                    item.title.toLowerCase().includes(query) ||
+                    (item.content && item.content.toLowerCase().includes(query)) ||
+                    (item.term && item.term.toLowerCase().includes(query))
+                );
+
+                searchResultsContainer.innerHTML = results.map(r => `
+                    <div class="search-result-item p-3 rounded-lg hover:bg-[var(--bg-light)] cursor-pointer" data-id="${r.id || r.term}" data-type="${r.type}">
+                        <div class="font-bold text-[var(--text-light)]">${r.title}</div>
+                        <div class="text-xs text-slate-500">${r.type}${r.category ? ` / ${r.category}` : ''}</div>
+                    </div>
+                `).join('') || `<p class="text-slate-500 p-3">No results found.</p>`;
+            });
+
+            searchResultsContainer.addEventListener('click', (e) => {
+                const item = e.target.closest('.search-result-item');
+                if (!item) return;
+
+                const id = item.dataset.id;
+                const type = item.dataset.type;
+
+                if (type === 'Glossary Term') {
+                    appState.category = 'glossary';
+                    renderContent();
+                    setTimeout(() => {
+                        const termElement = document.getElementById(`term-${id.replace(/\s+/g, '-')}`);
+                        if (termElement) {
+                            termElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            termElement.classList.add('ring-2', 'ring-pink-500');
+                            setTimeout(() => termElement.classList.remove('ring-2', 'ring-pink-500'), 2000);
+                        }
+                    }, 200);
+                } else {
+                    const policy = allSearchableItems.find(p => p.id === id);
+                    const categoryKey = Object.keys(sopData).find(key => sopData[key].policies && sopData[key].policies.some(p => p.id === id));
+                    if (categoryKey) {
+                        appState.category = categoryKey;
+                        appState.policy = id;
+                        renderContent();
+                    }
+                }
+                closeSearch();
+            });
+
 
             function renderContent() {
                 const data = sopData[appState.category];
@@ -1078,60 +927,47 @@
                 }
 
                 if (appState.category === 'intro') {
-                    mainContent.innerHTML = `
-                        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                            <h2 class="text-3xl font-bold tracking-tight text-slate-900 text-center">${data.title}</h2>
-                            <div class="mt-8 text-center max-w-3xl mx-auto prose prose-custom">${data.overview}</div>
-                        </div>
-                    `;
+                    mainContent.innerHTML = `<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8"><h2 class="text-3xl lg:text-5xl font-black gradient-text text-center">${data.title}</h2><div class="mt-8 text-center max-w-3xl mx-auto prose prose-custom">${data.overview}</div></div>`;
                     renderSopChart();
                 } else if (appState.category === 'glossary') {
                     let termsHtml = data.terms.sort((a,b) => a.term.localeCompare(b.term)).map(item => `
-                        <div class="bg-white p-4 rounded-lg border border-slate-200">
-                            <dt class="font-semibold text-slate-900">${item.term}</dt>
-                            <dd class="mt-1 text-slate-600">${item.def}</dd>
+                        <div id="term-${item.term.replace(/\s+/g, '-')}" class="bg-[var(--card-light)] p-4 rounded-xl border border-[var(--border-light)]">
+                            <dt class="font-bold text-slate-800 dark:text-slate-100">${item.term}</dt>
+                            <dd class="mt-1 text-slate-600 dark:text-slate-300">${item.def}</dd>
                         </div>
                     `).join('');
                     mainContent.innerHTML = `
                         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                             <h2 class="text-3xl font-bold tracking-tight text-slate-900">${data.title}</h2>
+                             <h2 class="text-3xl lg:text-4xl font-black gradient-text">${data.title}</h2>
                              <div class="mt-4 prose prose-custom">${data.overview}</div>
-                             <dl class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${termsHtml}</dl>
+                             <input id="glossary-search" type="text" placeholder="Filter terms..." class="w-full p-3 my-6 rounded-lg bg-[var(--bg-light)] border border-[var(--border-light)] focus:ring-2 focus:ring-pink-500 outline-none">
+                             <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="glossary-grid">${termsHtml}</dl>
                         </div>
                     `;
-                } else {
-                    const policyNavHtml = data.policies.map(p => `
-                        <li><a href="#" class="sub-nav-link block px-4 py-2 text-sm rounded-md text-slate-600 hover:bg-slate-100" data-policy-id="${p.id}">${p.title}</a></li>
-                    `).join('');
+                    document.getElementById('glossary-search').addEventListener('input', (e) => {
+                        const filter = e.target.value.toLowerCase();
+                        document.querySelectorAll('#glossary-grid > div').forEach(div => {
+                            const term = div.querySelector('dt').textContent.toLowerCase();
+                            const def = div.querySelector('dd').textContent.toLowerCase();
+                            div.style.display = (term.includes(filter) || def.includes(filter)) ? '' : 'none';
+                        });
+                    });
 
+                } else {
+                    const policyNavHtml = data.policies.map(p => `<li><a href="#" class="sub-nav-link block w-full text-left px-4 py-2 text-sm rounded-lg font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-policy-id="${p.id}">${p.title}</a></li>`).join('');
                     const activePolicy = data.policies.find(p => p.id === appState.policy) || data.policies[0];
-                    
-                    const complianceHtml = activePolicy.compliance ? activePolicy.compliance.map(c => `
-                        <button class="compliance-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800 hover:bg-teal-200" data-control-id="${c.id}">
-                           ${c.title}
-                        </button>
-                    `).join('') : '';
+                    const complianceHtml = activePolicy.compliance ? activePolicy.compliance.map(c => `<button class="compliance-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800 hover:bg-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:hover:bg-teal-800" data-control-id="${c.id}">${c.title}</button>`).join('') : '';
 
                     mainContent.innerHTML = `
                         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                            <div class="text-center">
-                                 <h2 class="text-3xl font-bold tracking-tight text-slate-900">${data.title}</h2>
-                                 <p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600">${data.overview}</p>
-                            </div>
+                            <div class="text-center"><h2 class="text-3xl lg:text-4xl font-black gradient-text">${data.title}</h2><p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-300">${data.overview}</p></div>
                             <div class="mt-12 lg:grid lg:grid-cols-12 lg:gap-8">
-                                <aside class="lg:col-span-3">
-                                    <nav class="space-y-1">
-                                        <ul id="sub-nav">${policyNavHtml}</ul>
-                                    </nav>
-                                </aside>
-                                <div id="policy-content" class="mt-8 lg:mt-0 lg:col-span-9">
-                                    <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
-                                        <h2 class="text-2xl font-bold text-slate-800 mb-6">${activePolicy.title}</h2>
-                                        <div class="prose prose-custom">${activePolicy.content}</div>
-                                        ${complianceHtml ? `<div class="mt-8 border-t border-slate-200 pt-6">
-                                            <h4 class="text-sm font-semibold text-slate-600 mb-3">Relevant Compliance Controls</h4>
-                                            <div class="flex flex-wrap gap-2">${complianceHtml}</div>
-                                        </div>` : ''}
+                                <aside class="lg:col-span-3 mb-8 lg:mb-0"><nav class="space-y-1 sticky top-24"><ul id="sub-nav">${policyNavHtml}</ul></nav></aside>
+                                <div id="policy-content" class="lg:col-span-9">
+                                    <article class="bg-[var(--card-light)] rounded-2xl shadow-lg border border-[var(--border-light)] p-6 md:p-8">
+                                        <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">${activePolicy.title}</h2>
+                                        <div class="prose prose-custom text-[var(--text-light)]">${activePolicy.content}</div>
+                                        ${complianceHtml ? `<div class="mt-8 border-t border-[var(--border-light)] pt-6"><h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-3">Relevant Compliance Controls</h4><div class="flex flex-wrap gap-2">${complianceHtml}</div></div>` : ''}
                                     </article>
                                 </div>
                             </div>
@@ -1140,73 +976,57 @@
                     updateSubNavActiveState();
                 }
                 updateMainNavActiveState();
+                window.scrollTo(0, 0);
             }
 
             function updateSubNavActiveState() {
-                if (!sopData[appState.category].policies) return;
+                if (!sopData[appState.category] || !sopData[appState.category].policies) return;
                 const currentPolicyId = appState.policy || sopData[appState.category].policies[0].id;
                 document.querySelectorAll('#sub-nav .sub-nav-link').forEach(link => {
                     link.classList.remove('active-nav');
                     if (link.dataset.policyId === currentPolicyId) {
-                        link.classList.add('active-nav');
+                        link.classList.add('bg-slate-100', 'dark:bg-slate-800', 'font-bold');
                     }
                 });
             }
 
             function updateMainNavActiveState() {
-                 navLinks.forEach(link => {
-                    link.classList.remove('active-nav');
-                    if(link.dataset.content === appState.category) {
-                         link.classList.add('active-nav');
-                    }
+                 document.querySelectorAll('.main-nav-link').forEach(link => {
+                     link.classList.remove('active-nav', 'text-white');
                  });
+                 const activeLink = document.querySelector(`.main-nav-link[data-content="${appState.category}"]`);
+                 if(activeLink) {
+                    activeLink.classList.add('active-nav', 'text-white');
+                 }
             }
 
 
             function renderSopChart() {
-                const ctx = document.getElementById('sopChart').getContext('2d');
+                const isDark = document.documentElement.classList.contains('dark');
+                const chartContainer = document.getElementById('sopChart');
+                if(Chart.getChart(chartContainer)){ Chart.getChart(chartContainer).destroy(); }
+
                 const categories = Object.keys(sopData).filter(k => k.startsWith('cat'));
-                const chartData = {
-                    labels: categories.map(c => sopData[c].title),
-                    datasets: [{
-                        label: '# of Policies',
-                        data: categories.map(c => sopData[c].policies.length),
-                        backgroundColor: 'rgba(13, 148, 136, 0.6)', // teal-600
-                        borderColor: 'rgba(15, 118, 110, 1)', // teal-700
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(13, 148, 136, 0.8)'
-                    }]
-                };
-                const sopChart = new Chart(ctx, {
+                new Chart(chartContainer.getContext('2d'), {
                     type: 'bar',
-                    data: chartData,
+                    data: {
+                        labels: categories.map(c => sopData[c].title),
+                        datasets: [{
+                            label: '# of Policies',
+                            data: categories.map(c => sopData[c].policies.length),
+                            backgroundColor: 'rgba(236, 72, 153, 0.6)',
+                            borderColor: 'rgba(236, 72, 153, 1)',
+                            borderWidth: 1,
+                            hoverBackgroundColor: 'rgba(236, 72, 153, 0.8)'
+                        }]
+                    },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    title: (context) => context[0].label
-                                }
-                            }
-                        },
+                        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                        scales: { x: { beginAtZero: true, grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: isDark ? '#94a3b8' : '#64748b', stepSize: 1 } }, y: { grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: isDark ? '#94a3b8' : '#64748b' } } },
+                        plugins: { legend: { display: false } },
                         onClick: (event, elements) => {
                             if (elements.length > 0) {
-                                const index = elements[0].index;
-                                const categoryId = categories[index];
-                                appState.category = categoryId;
+                                appState.category = categories[elements[0].index];
                                 appState.policy = null;
                                 renderContent();
                             }
@@ -1233,6 +1053,12 @@
                     }
                 }
             });
+            
+            homeButton.addEventListener('click', () => {
+                appState.category = 'intro';
+                appState.policy = null;
+                renderContent();
+            });
 
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
@@ -1244,22 +1070,12 @@
                 });
             });
             
-            modalClose.addEventListener('click', () => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            });
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                }
-            });
-
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-
+            modalClose.addEventListener('click', () => { modal.classList.add('hidden'); modal.classList.remove('flex'); });
+            modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); } });
+            mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+            
+            buildMenu(menuPopover);
+            buildMenu(mobileExploreMenu);
             renderContent();
         });
     </script>
