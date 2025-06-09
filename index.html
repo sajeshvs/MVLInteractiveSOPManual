@@ -95,19 +95,16 @@
         .prose-custom li {
             margin-top: 0.5rem;
         }
-        .prose-custom h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            margin-top: 2rem;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 0.5rem;
+        .prose-custom .policy-section {
+            margin-top: 1.5rem;
         }
-         .prose-custom h4 {
+        .prose-custom .policy-section-title {
             font-size: 1.1rem;
             font-weight: 600;
+            color: #1e293b; /* slate-800 */
             margin-bottom: 0.75rem;
-            margin-top: 1.5rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid #94a3b8; /* slate-400 */
         }
 
         /* Logo Styles */
@@ -250,9 +247,9 @@
                 title: "Welcome to the MVL Interactive SOP Manual",
                 overview: `
                     <p class="text-lg text-slate-600 mb-6">This interactive application transforms MVL's Standard Operating Procedure (SOP) Manual into a dynamic, user-friendly resource. It establishes the official policies, procedures, and guidelines governing the use, management, and security of MVL's information technology (IT) resources.</p>
-                    <p class="text-slate-600 mb-6">Its purpose is to ensure operational integrity, protect corporate and client data, maintain compliance with legal and contractual obligations (including CMMC and NIST SP 800-171), and guide employees in the responsible use of technology.</p>
+                    <p class="text-slate-600 mb-6">Its purpose is to ensure operational integrity, protect corporate and client data, maintain compliance, and guide employees in the responsible use of technology. We have prioritized concise information and visual flowcharts to make policies easy to understand. Unfamiliar with a term? Visit our comprehensive <strong>Glossary</strong> from the main menu.</p>
                     <h3 class="text-xl font-semibold text-slate-800 mb-4">Navigating the Manual</h3>
-                    <p class="text-slate-600 mb-6">Use the navigation bar above to explore the 8 main policy categories, or click on a bar in the chart below to jump directly to a category. Each section provides detailed policies, procedures, and interactive diagrams to help you quickly find the information you need.</p>
+                    <p class="text-slate-600 mb-6">Use the navigation bar above to explore the 8 main policy categories, or click on a bar in the chart below to jump directly to a category. Each section provides detailed policies and interactive diagrams to help you quickly find the information you need.</p>
                     <div class="chart-container">
                         <canvas id="sopChart"></canvas>
                     </div>
@@ -266,7 +263,6 @@
                     { term: "BYOD", def: "Bring Your Own Device: The practice of using a personally owned device to access company information and systems." },
                     { term: "CMMC", def: "Cybersecurity Maturity Model Certification: A framework required by the U.S. Department of Defense to ensure its contractors have adequate cybersecurity controls." },
                     { term: "CUI", def: "Controlled Unclassified Information: Information that requires safeguarding or dissemination controls pursuant to and consistent with applicable law, regulations, and government-wide policies." },
-                    { term: "Disaster Recovery (DR)", def: "The process of restoring IT systems and data after a major disruption." },
                     { term: "Incident", def: "An event that actually or potentially jeopardizes the confidentiality, integrity, or availability of an information system or the information the system processes, stores, or transmits." },
                     { term: "ITSM", def: "IT Service Management: The activities performed by an organization to design, build, deliver, operate, and control IT services offered to customers." },
                     { term: "Least Privilege", def: "The principle of restricting access rights for users to the minimum permissions they need to perform their work." },
@@ -274,255 +270,353 @@
                     { term: "NIST", def: "National Institute of Standards and Technology: A U.S. federal agency that develops cybersecurity standards." },
                     { term: "PAM", def: "Privileged Access Management: Tools and practices for controlling and monitoring access for privileged users." },
                     { term: "RBAC", def: "Role-Based Access Control: A method of restricting system access based on user roles." },
-                    { term: "SaaS", def: "Software as a Service: A software delivery model where applications are hosted by a vendor and made available over the internet." },
-                    { term: "SIEM", def: "Security Information and Event Management: A solution that provides real-time analysis of security alerts." },
+                    { term: "Turnaround Time (TAT)", def: "The expected duration required to complete a task, request, or process. TATs help set service expectations and measure operational efficiency." },
                     { term: "ZTA", def: "Zero Trust Architecture: A security model that requires strict identity verification for every person and device attempting to access resources on a network." },
                 ]
             },
             cat1: {
                 title: "Cybersecurity Controls",
-                overview: `This category outlines the foundational protective measures to defend MVL systems, data, and users against cyber threats, aligned with a Zero Trust Architecture (ZTA). These policies are designed to create a security-first culture and protect MVL's information assets from all threats, whether internal or external.`,
+                overview: `This category outlines the foundational protective measures to defend MVL systems, data, and users against cyber threats, aligned with a Zero Trust Architecture (ZTA).`,
                 policies: [
                     {
                         id: "1-1",
                         title: "Cybersecurity Policy",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To establish a security-first culture and a Zero Trust security model to protect MVL's information assets from all threats, whether internal or external.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>MVL adopts a <strong>Zero Trust Architecture (ZTA)</strong>. No user or device is trusted by default, regardless of its location. All access requests are strictly authenticated and authorized.</li>
-                                <li>The principle of <strong>least privilege</strong> shall be enforced. Users are granted only the minimum access required to perform their job functions.</li>
-                                <li>All security controls will be implemented with the assumption of a <strong>breach</strong>, focusing on rapid detection, response, and recovery.</li>
-                                <li>Cybersecurity risk shall be assessed periodically and managed as an integral part of MVL’s overall risk management framework.</li>
-                            </ul>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To establish a security-first culture and a Zero Trust model to protect MVL's information assets from all threats.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT Security Team:</strong> Oversees daily security operations, applies patches, monitors for threats, and leads incident response.</li>
+                                    <li><strong>Department Managers:</strong> Ensure their teams are trained and follow all security protocols.</li>
+                                    <li><strong>Employees:</strong> Maintain secure practices, use strong passwords, and report suspicious activity.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-node"><span>Assess Risks & Vulnerabilities</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Implement Protective Controls (e.g., ZTA, MFA)</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Continuously Detect & Monitor Threats</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Respond to & Contain Incidents</span></div>
+                                     <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Recover & Improve</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "RA.L2-3.11.1", title: "CMMC RA.L2-3.11.1", desc: "Periodically assess the risk to organizational operations, assets, and individuals, resulting from the operation of organizational systems and the associated processing, storage, or transmission of CUI." },
-                            { id: "NIST-3.12.1", title: "NIST SP 800-171 3.12.1", desc: "Periodically assess the security controls in organizational systems to determine if the controls are effective in their application." }
-                        ]
+                        compliance: [{ id: "RA.L2-3.11.1", title: "CMMC RA.L2-3.11.1", desc: "Periodically assess the risk to organizational operations, assets, and individuals." }]
                     },
                     {
                         id: "1-2",
-                        title: "Data Protection & Classification Policy",
+                        title: "Data Protection & Classification",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To ensure that all MVL data, particularly Controlled Unclassified Information (CUI), is properly classified, handled, and protected throughout its lifecycle.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>Data shall be classified into: <strong>Public</strong>, <strong>Internal</strong>, and <strong>Confidential/CUI</strong>.</li>
-                                <li>All CUI must be handled in accordance with the documented "CUI Flow Procedures" and marked appropriately.</li>
-                                <li>Access to Confidential/CUI data is strictly controlled based on need-to-know and role-based access control (RBAC).</li>
-                                <li>Encryption shall be used to protect Confidential/CUI data at rest and in transit.</li>
-                            </ul>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To ensure all MVL data, especially Controlled Unclassified Information (CUI), is properly classified, handled, and protected.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT Department:</strong> Implements technical controls like encryption and role-based access.</li>
+                                    <li><strong>Data Owners:</strong> Classify and manage data; IT ensures retention and disposal policies are followed.</li>
+                                    <li><strong>Employees:</strong> Adhere to handling protocols for all sensitive information.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Identify or Create Data</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Is it Sensitive or CUI?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Classify, Mark & Encrypt Data</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Store in Secure, Access-Controlled Location</span></div>
+                                     <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Monitor Access & Usage</span></div>
+                                </div>
+                            </div>
                         `,
-                         compliance: [
-                            { id: "AC.L2-3.1.22", title: "CMMC AC.L2-3.1.22", desc: "Control CUI in accordance with authorized use." },
-                            { id: "MP.L2-3.8.3", title: "CMMC MP.L2-3.8.3", desc: "Mark media containing CUI." },
-                            { id: "SC-3.13.8", title: "NIST SP 800-171 SC 3.13.8", desc: "Implement cryptographic mechanisms to prevent unauthorized disclosure of CUI during transmission." }
-                        ]
+                         compliance: [{ id: "AC.L2-3.1.22", title: "CMMC AC.L2-3.1.22", desc: "Control CUI in accordance with authorized use." }]
                     },
                     {
                         id: "1-3",
-                        title: "Incident Response Policy",
+                        title: "Incident Response",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To ensure a swift, effective, and coordinated response to any security incident, minimizing impact and restoring normal operations as quickly as possible.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>All employees must immediately report any suspected security incident to the IT Help Desk.</li>
-                                <li>An Incident Response Team (IRT) manages all phases of an incident: Preparation, Identification, Containment, Eradication, Recovery, and Lessons Learned.</li>
-                            </ul>
-                            <h4>Incident Response Flow</h4>
-                            <div class="flowchart">
-                                <div class="flowchart-io"><span>Suspected Incident Identified</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>IT Help Desk Triage</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-decision"><span>Is it a Security Incident?</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Activate Incident Response Team (IRT)</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Containment: Isolate systems</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Eradication: Remove threat</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Recovery: Restore systems</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Post-Incident Analysis</span></div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To ensure a swift, effective, and coordinated response to any security incident, minimizing impact and restoring normal operations.</p>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>All Employees:</strong> Must immediately report suspected incidents to the IT Help Desk.</li>
+                                    <li><strong>IT Security Team:</strong> Leads the Incident Response Team (IRT) to manage containment, eradication, and recovery.</li>
+                                    <li><strong>Executive Management:</strong> Notified of serious incidents and approves external communications.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Suspected Incident Identified</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Report to IT Help Desk</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Is it a Security Incident?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Activate Incident Response Team (IRT)</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Contain, Eradicate & Recover</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Post-Incident Analysis & Report</span></div>
+                                </div>
                             </div>
                         `,
-                        compliance: [
-                             { id: "IR.L2-3.6.1", title: "CMMC IR.L2-3.6.1", desc: "Establish an operational incident-handling capability for organizational systems that includes preparation, detection, analysis, containment, recovery, and user response activities." },
-                             { id: "IR.L2-3.6.2", title: "CMMC IR.L2-3.6.2", desc: "Track, document, and report incidents to appropriate officials and/or authorities both internal and external to the organization." }
-                        ]
+                        compliance: [{ id: "IR.L2-3.6.1", title: "CMMC IR.L2-3.6.1", desc: "Establish an operational incident-handling capability." }]
                     }
                 ]
             },
             cat2: { 
                 title: "Acceptable Use of IT Resources", 
-                overview: "This category defines the standards for appropriate, ethical, and secure use of MVL’s IT assets to protect the company, its employees, and its data.",
+                overview: "This category defines the standards for appropriate, ethical, and secure use of MVL’s IT assets.", 
                 policies: [
                     { 
                         id: "2-1", 
-                        title: "Acceptable Use Policy (AUP)", 
+                        title: "Acceptable Use (AUP)", 
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To define employee responsibilities and outline acceptable and unacceptable use of MVL's IT resources.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>MVL resources are for business purposes. Limited personal use is permitted if it does not interfere with work or violate policies.</li>
-                                <li>Users are responsible for all activity on their accounts. Passwords must not be shared.</li>
-                                <li><strong>Prohibited activities include:</strong> Engaging in illegal or malicious activity, installing unauthorized software, visiting inappropriate websites, and sending harassing content.</li>
-                                <li>MVL reserves the right to monitor IT resource use to ensure compliance.</li>
-                            </ul>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To define employee responsibilities for the appropriate use of MVL's IT resources.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>Employees:</strong> Use systems for business purposes and avoid prohibited activities.</li>
+                                    <li><strong>IT Department:</strong> Enforces rules through system monitoring and investigates violations.</li>
+                                    <li><strong>Department Managers:</strong> Reinforce compliance and escalate violations to IT and HR.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Employee intends to use an IT resource</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Is the use for a business purpose?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Proceed with Use</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Does it violate any policy? (e.g., illegal, harassment)</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                     <div class="flowchart-io"><span>Action is either Acceptable or a Violation</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                             { id: "AT.L2-3.2.1", title: "CMMC AT.L2-3.2.1", desc: "Ensure that managers, systems administrators, and users of organizational systems are made aware of the security risks associated with their activities and of the applicable policies, standards, and procedures related to the security of organizational systems." }
-                        ]
+                        compliance: [{ id: "AT.L2-3.2.1", title: "CMMC AT.L2-3.2.1", desc: "Ensure users are aware of security risks and policies." }]
                     },
                     {
                         id: "2-2",
-                        title: "Social Media & External Tools Policy",
+                        title: "Social Media & External Tools",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To govern the use of social media and external web-based tools (including AI platforms) to mitigate security and reputational risks.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>Employees may not represent themselves as speaking on behalf of MVL on social media unless explicitly authorized.</li>
-                                <li>Sharing of Confidential/CUI or any other sensitive company information on any social media or external platform is strictly prohibited.</li>
-                                <li>All external software, cloud services, or AI tools must be formally approved through the procurement process (see Category 8) before use for any MVL business.</li>
-                            </ul>
+                           <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To govern the use of social media and external web tools to mitigate security and reputational risks.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>Employees:</strong> Must not share MVL-related content or use unapproved external tools for work.</li>
+                                    <li><strong>IT Department:</strong> Blocks or restricts access to unauthorized platforms.</li>
+                                    <li><strong>Compliance & Communications:</strong> Review requests for public-facing content or new tools.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Want to use external tool or post on social media?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Does it involve MVL data or representation?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Consult Policy & Seek Approval from IT/Compliance</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Proceed only if approved and compliant</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "CM.L2-3.4.8", title: "CMMC CM.L2-3.4.8", desc: "Prohibit the installation of unauthorized software." }
-                        ]
+                        compliance: [{ id: "CM.L2-3.4.8", title: "CMMC CM.L2-3.4.8", desc: "Prohibit the installation of unauthorized software." }]
                     }
                 ] 
             },
             cat3: { 
                 title: "Remote Access & BYOD", 
-                overview: "This category outlines policies for securely working from outside MVL premises or using personal devices for work, ensuring the protection of company data regardless of location.", 
+                overview: "This category outlines policies for securely working from outside MVL premises or using personal devices.", 
                 policies: [
                     { 
                         id: "3-1", 
-                        title: "Remote Access Policy", 
+                        title: "Remote Access", 
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To define the security requirements for connecting to MVL's network from any remote location.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>Remote access is a privilege and must be approved by the user's manager and IT.</li>
-                                <li>All remote connections to the internal MVL network must be made through the company-provided Virtual Private Network (VPN).</li>
-                                <li>Company-issued devices used for remote access must comply with all security controls, including endpoint protection, encryption, and timely patching.</li>
-                            </ul>
+                           <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To define security requirements for connecting to MVL's network from any remote location.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>Employees:</strong> Request remote access and ensure devices meet security standards.</li>
+                                    <li><strong>IT Department:</strong> Configures secure access (VPN), monitors activity, and enforces device compliance.</li>
+                                    <li><strong>Managers:</strong> Approve remote work eligibility and confirm access needs.</li>
+                                </ul>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Employee Requests Remote Access</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Manager Approves Business Need</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>IT Configures Secure VPN Access</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Secure Connection Established & Monitored</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "AC.L2-3.1.12", title: "CMMC AC.L2-3.1.12", desc: "Monitor and control remote access sessions." },
-                            { id: "AC.L2-3.1.13", title: "CMMC AC.L2-3.1.13", desc: "Employ cryptographic mechanisms to protect the confidentiality of remote access sessions." }
-                        ]
+                        compliance: [{ id: "AC.L2-3.1.12", title: "CMMC AC.L2-3.1.12", desc: "Monitor and control remote access sessions." }]
                     },
                     {
                         id: "3-2",
-                        title: "Bring Your Own Device (BYOD) Policy",
+                        title: "Bring Your Own Device (BYOD)",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To define the terms and security requirements for using personal devices to access MVL data and systems.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>Use of a personal device must be formally requested and approved.</li>
-                                <li>Approved BYOD devices must have specific security software installed (e.g., Mobile Device Management - MDM).</li>
-                                <li>The device must be password/biometric protected, have full-disk encryption enabled, and a screen lock configured.</li>
-                                <li>MVL reserves the right to remotely wipe company data from a personal device if it is lost, stolen, or upon termination.</li>
-                            </ul>
-                            <h4>BYOD Approval Process</h4>
-                            <div class="flowchart">
-                                <div class="flowchart-io"><span>Employee requests BYOD use</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Manager Approval</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-decision"><span>IT Security Review: Device Meets Requirements?</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>IT provisions MDM & configures device</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Access Granted - Device registered</span></div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To define requirements for using personal devices to access MVL data and systems.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>Employees:</strong> Obtain approval and ensure their personal devices meet security standards (encryption, passwords, etc.).</li>
+                                    <li><strong>IT Department:</strong> Reviews device compliance and installs required security configurations (e.g., MDM).</li>
+                                    <li><strong>Managers:</strong> Validate business necessity and approve usage requests.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Employee requests BYOD use via form</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>IT Security Review: Meets Requirements?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>IT installs security software on device</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Access Granted & Device Registered</span></div>
+                                </div>
                             </div>
                         `,
-                        compliance: [
-                            { id: "AC.L2-3.1.17", title: "CMMC AC.L2-3.1.17", desc: "Protect CUI on mobile devices." }
-                        ]
+                        compliance: [{ id: "AC.L2-3.1.17", title: "CMMC AC.L2-3.1.17", desc: "Protect CUI on mobile devices." }]
                     }
                 ]
             },
             cat4: { 
                 title: "Identity & Access Management (IAM)", 
-                overview: "This category defines how user identities are managed, access is granted and revoked, and privileged accounts are controlled according to the principle of least privilege.", 
+                overview: "This category defines how user identities are managed, access is granted, and privileged accounts are controlled.", 
                 policies: [
                     {
                         id: "4-1",
-                        title: "User Access Lifecycle Policy (Joiner-Mover-Leaver)",
+                        title: "User Access Lifecycle",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To ensure timely and appropriate management of user access throughout their employment lifecycle.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li><strong>Joiner:</strong> Access for new hires is provisioned based on a formal request from HR and the hiring manager, using Role-Based Access Control (RBAC).</li>
-                                <li><strong>Mover:</strong> When an employee changes roles, their manager must submit a request to modify access rights. Old access is revoked, new access is granted.</li>
-                                <li><strong>Leaver:</strong> Upon notification from HR, all of the user's access to MVL systems shall be disabled by the end of their last working day.</li>
-                            </ul>
-                            <h4>User Access Lifecycle Flow</h4>
-                            <div class="flowchart">
-                                <div class="flowchart-io"><span>HR Initiates Action (Hire, Move, or Terminate)</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Manager Submits/Approves Access Request via ITSM</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>IT Provisions, Modifies, or Revokes Access per RBAC</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Access Status Updated (Enabled, Changed, or Disabled)</span></div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To ensure timely and appropriate management of user access throughout their employment lifecycle (Joiner, Mover, Leaver).</p>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>HR:</strong> Coordinates start dates, role changes, and departures, initiating requests to IT.</li>
+                                    <li><strong>IT Department:</strong> Creates, modifies, or disables user accounts and access based on requests.</li>
+                                    <li><strong>Managers:</strong> Confirm the systems and access levels needed for their team members.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>HR Initiates Action (Hire, Move, Terminate)</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Manager Submits/Approves Access Request</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>IT Provisions, Modifies, or Revokes Access</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Access Status Updated & Verified</span></div>
+                                </div>
                             </div>
                         `,
-                        compliance: [
-                            { id: "IA.L2-3.5.1", title: "CMMC IA.L2-3.5.1", desc: "Identify information system users, processes acting on behalf of users, or devices." },
-                            { id: "AC.L2-3.1.2", title: "CMMC AC.L2-3.1.2", desc: "Control internal system access. This includes actions such as account creation, modification, disabling, and removal." }
-                        ]
+                        compliance: [{ id: "AC.L2-3.1.2", title: "CMMC AC.L2-3.1.2", desc: "Control internal system access (creation, modification, disabling, and removal)." }]
                     },
                     {
                         id: "4-2",
-                        title: "Privileged Access Management (PAM) Policy",
+                        title: "Privileged & Shared Accounts",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To strictly control, monitor, and audit the use of all privileged accounts (e.g., administrator, root).</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>The principle of least privilege is strictly enforced for all privileged access.</li>
-                                <li>Privileged users must use a separate, dedicated administrative account for tasks requiring elevated permissions.</li>
-                                <li>All privileged accounts require Multi-Factor Authentication (MFA).</li>
-                                <li>All privileged access sessions may be monitored and recorded.</li>
-                            </ul>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To strictly control, monitor, and audit the use of all privileged (e.g., administrator) and shared accounts.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT Department:</strong> Manages privileged accounts, maintains audit logs, and restricts access.</li>
+                                    <li><strong>Privileged Users:</strong> Must use a separate admin account and follow dual-authentication protocols.</li>
+                                    <li><strong>Compliance:</strong> Reviews privileged access logs during audits.</li>
+                                </ul>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Need for Privileged Access Identified</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Is access justified and approved by Manager & IT?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Use dedicated admin account with MFA</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>All actions are logged and audited</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "AC.L2-3.1.5", title: "CMMC AC.L2-3.1.5", desc: "Employ the principle of least privilege, including for specific security functions and privileged accounts." },
-                            { id: "IA.L2-3.5.3", title: "CMMC IA.L2-3.5.3", desc: "Use multifactor authentication for local and network access to privileged accounts and for network access to non-privileged accounts." }
-                        ]
+                        compliance: [{ id: "AC.L2-3.1.5", title: "CMMC AC.L2-3.1.5", desc: "Employ the principle of least privilege." }]
                     },
                     {
                         id: "4-3",
-                        title: "Access Review Policy",
+                        title: "Access Review",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To periodically review user access rights to ensure they remain appropriate and necessary.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>User access rights shall be reviewed on a quarterly basis.</li>
-                                <li>Managers and data owners are responsible for reviewing and certifying the access rights of their team members.</li>
-                                <li>Any access found to be excessive or no longer necessary must be reported to IT for immediate revocation.</li>
-                                <li>User accounts that are inactive for 30 days shall be automatically disabled.</li>
-                            </ul>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To periodically review user access rights to ensure they remain appropriate and necessary.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT Department:</strong> Conducts quarterly reviews of active accounts and flags dormant users.</li>
+                                    <li><strong>Department Managers:</strong> Validate and certify access rights for all team members during reviews.</li>
+                                    <li><strong>Compliance:</strong> Audits the account recertification records.</li>
+                                </ul>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Quarterly Access Review Cycle Begins</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>IT generates access reports for each department</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Managers review and certify team access</span></div>
+                                     <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Is any access excessive or unnecessary?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>IT revokes unneeded access & closes review</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "AC.L2-3.1.4", title: "CMMC AC.L2-3.1.4", desc: "Periodically review and update access permissions." },
-                            { id: "IA.L2-3.5.8", title: "CMMC IA.L2-3.5.8", desc: "Disable identifiers after an organization-defined time period of inactivity." }
-                        ]
+                        compliance: [{ id: "AC.L2-3.1.4", title: "CMMC AC.L2-3.1.4", desc: "Periodically review and update access permissions." }]
                     }
                 ] 
             },
@@ -532,51 +626,69 @@
                 policies: [
                     {
                         id: "5-1",
-                        title: "IT Change Management Policy",
+                        title: "IT Services & Support",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To provide a structured process for managing all changes to the IT environment, minimizing disruption and risk.</p>
-                             <h4>Policy Statements</h4>
-                            <ul>
-                                <li>All changes to production systems must be submitted through the IT Service Management (ITSM) system via a formal Change Request.</li>
-                                <li>Each Change Request must include a description, justification, risk assessment, implementation plan, and backout plan.</li>
-                                <li>Changes are reviewed and approved by a Change Advisory Board (CAB).</li>
-                                <li>Emergency changes may bypass the full review process but must be documented and reviewed retrospectively.</li>
-                            </ul>
-                            <h4>IT Change Management Flow</h4>
-                            <div class="flowchart">
-                                <div class="flowchart-io"><span>Change Request Submitted via ITSM</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Change Advisory Board (CAB) Review</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-decision"><span>Risk Assessment & Planning Complete & Approved?</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Implement Change</span></div>
-                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Close Change Request</span></div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To detail how users request assistance, receive help, and escalate unresolved technical issues.</p>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>End Users:</strong> Submit requests via the designated help desk platform (ITSM).</li>
+                                    <li><strong>IT Support Technicians:</strong> Triage tickets, provide support, and escalate complex issues.</li>
+                                    <li><strong>IT Manager:</strong> Oversees workload, service level compliance, and support quality.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>User Experiences Issue / Has Request</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Submit Ticket via ITSM Portal</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>IT Triage: Determine Priority</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Assign to Technician & Resolve</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>User Confirms Resolution & Ticket is Closed</span></div>
+                                </div>
                             </div>
                         `,
-                        compliance: [
-                            { id: "CM.L2-3.4.2", title: "CMMC CM.L2-3.4.2", desc: "Track, review, approve/disapprove, and log changes to organizational systems." }
-                        ]
+                        compliance: [{ id: "IR.L2-3.6.1", title: "CMMC IR.L2-3.6.1", desc: "Establish an operational incident-handling capability." }]
                     },
                      {
                         id: "5-2",
-                        title: "Hot Desking Policy",
+                        title: "IT Change Management",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To define the procedures and responsibilities for using shared "hot desk" workspaces.</p>
-                             <h4>Policy Statements</h4>
-                            <ul>
-                                <li>Hot desks are available on a first-come, first-served basis unless booked in advance.</li>
-                                <li>Users must log into workstations using their own credentials and log off completely at the end of each session.</li>
-                                <li>Users must clear the desk of all personal and business materials (Clean Desk Policy).</li>
-                                <li>No sensitive or CUI data is to be left on the workstation or physical desk.</li>
-                            </ul>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To control how MVL applies updates, patches, and system modifications to minimize disruption and ensure accountability.</p>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT Department:</strong> Logs, evaluates, tests, and schedules changes.</li>
+                                    <li><strong>Requesting Departments:</strong> Submit change requests with business justification.</li>
+                                    <li><strong>Executive Management:</strong> Reviews impact, risk, and downtime for major changes before approval.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Change Request Submitted via ITSM</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Change Advisory Board (CAB) Review</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Risk Assessment & Planning Approved?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Implement & Test Change</span></div>
+                                     <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Document & Close Change Request</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "PE.L2-3.10.1", title: "CMMC PE.L2-3.10.1", desc: "Limit physical access to organizational systems, equipment, and the respective operating environments to authorized individuals." }
-                        ]
+                        compliance: [{ id: "CM.L2-3.4.2", title: "CMMC CM.L2-3.4.2", desc: "Track, review, approve/disapprove, and log changes." }]
                     }
                 ] 
             },
@@ -586,53 +698,70 @@
                 policies: [
                     {
                         id: "6-1",
-                        title: "Data Backup Policy",
+                        title: "Data Backup",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To ensure that critical MVL data is regularly backed up, secured, and can be restored in a timely manner.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li><strong>Schedule:</strong> Daily incremental and Weekly full backups.</li>
-                                <li><strong>Recovery Point Objective (RPO):</strong> 24 hours.</li>
-                                <li><strong>Recovery Time Objective (RTO):</strong> 48 hours for critical systems.</li>
-                                <li>Backup data is encrypted at rest and in transit.</li>
-                                <li>Backups are stored in a geographically separate, secure location.</li>
-                                <li>Backup restoration tests are performed quarterly to verify integrity.</li>
-                            </ul>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To ensure that critical MVL data is regularly backed up, secured, and can be restored in a timely manner.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>Backup Administrators (IT):</strong> Schedule backups, verify completion, and manage storage solutions.</li>
+                                    <li><strong>Data Owners:</strong> Confirm critical business data is included in backup scope.</li>
+                                    <li><strong>Compliance:</strong> Reviews retention rules and encryption methods for adherence.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Automated Daily & Weekly Backup Jobs Run</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Data is Encrypted and Stored On-site & Off-site</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Backup Verification Successful?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Quarterly Restoration Test Performed</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Test Results Documented</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "RE.L2-3.10.3", title: "CMMC RE.L2-3.10.3", desc: "Regularly perform and test data back-ups." }
-                        ]
+                        compliance: [{ id: "RE.L2-3.10.3", title: "CMMC RE.L2-3.10.3", desc: "Regularly perform and test data back-ups." }]
                     },
                     {
                         id: "6-2",
-                        title: "Disaster Recovery (DR) & Business Continuity (BCP) Policy",
+                        title: "Disaster Recovery (DR) & Business Continuity (BCP)",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To provide a comprehensive plan for restoring IT systems (DR) and continuing essential business functions (BCP) during and after a major disruption.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>A formal Business Continuity Plan (BCP) and an IT Disaster Recovery (DR) Plan are maintained and reviewed annually.</li>
-                                <li>The plans identify critical functions, recovery priorities, and activation criteria.</li>
-                                <li>The plans are tested annually through tabletop exercises and/or technical simulations.</li>
-                            </ul>
-                            <h4>BCP & DR Relationship</h4>
-                            <div class="flowchart">
-                                <div class="flowchart-io"><span>Disruption Occurs</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Activate Plans</span></div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flex flex-col md:flex-row gap-4">
-                                    <div class="flowchart-node"><strong>Business Continuity Plan (BCP)</strong><br/><small>Focus: Keep Business Running</small></div>
-                                    <div class="flowchart-node"><strong>Disaster Recovery Plan (DR)</strong><br/><small>Focus: Restore IT Systems</small></div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To provide a plan for restoring IT systems (DR) and continuing essential business functions (BCP) during and after a major disruption.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT DR Team:</strong> Activates recovery plan, restores critical infrastructure, and verifies data integrity.</li>
+                                    <li><strong>Business Continuity Team:</strong> Maintains process maps, contact lists, and contingency workarounds.</li>
+                                    <li><strong>All Departments:</strong> Designate critical functions and participate in annual tests.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Disruption Occurs (e.g., Outage, Cyberattack)</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Activate DR/BCP Plans</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flex flex-col md:flex-row gap-4">
+                                        <div class="flowchart-node"><strong>Business Continuity Plan (BCP)</strong><br/><small>Focus: Keep Business Running with workarounds</small></div>
+                                        <div class="flowchart-node"><strong>Disaster Recovery Plan (DR)</strong><br/><small>Focus: Restore IT Systems from backups</small></div>
+                                    </div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Return to Normal Operations</span></div>
                                 </div>
-                                <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Return to Normal Operations</span></div>
                             </div>
                         `,
-                        compliance: [
-                            { id: "IR.L2-3.6.2", title: "CMMC IR.L2-3.6.2", desc: "Track, document, and report incidents. This includes testing response capabilities." }
-                        ]
+                        compliance: [{ id: "IR.L2-3.6.2", title: "CMMC IR.L2-3.6.2", desc: "Track, document, and report incidents, including testing response capabilities." }]
                     }
                 ] 
             },
@@ -642,49 +771,68 @@
                 policies: [
                     {
                         id: "7-1",
-                        title: "System Monitoring & Auditing Policy",
+                        title: "System Monitoring & Auditing",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To ensure that all system activity is logged and monitored to detect, investigate, and respond to potential security threats and policy violations.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>Audit logs that record user activities, exceptions, and security events are generated and retained for a minimum of 90 days.</li>
-                                <li>Logs are monitored through a Security Information and Event Management (SIEM) tool.</li>
-                                <li>Logs are reviewed quarterly by the Compliance department.</li>
-                            </ul>
+                           <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To track and analyze user activity, system performance, and security events to detect anomalies, misuse, or breaches.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT Security Team:</strong> Maintains audit logs, monitors privileged accounts, and investigates automated alerts from the SIEM.</li>
+                                    <li><strong>Compliance Team:</strong> Conducts quarterly log reviews and investigates suspicious events independently.</li>
+                                    <li><strong>Third-Party Auditors:</strong> Review logs during formal compliance assessments.</li>
+                                </ul>
+                            </div>
+                             <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>System & User Activity Occurs</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Logs are Generated and Sent to SIEM</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-decision"><span>Automated Alert Triggered?</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>IT Security Investigates Immediately</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Quarterly Compliance Review of All Logs</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "AU.L2-3.3.1", title: "CMMC AU.L2-3.3.1", desc: "Create and retain individual audit records of system access and activity." },
-                            { id: "AU.L2-3.3.5", title: "CMMC AU.L2-3.3.5", desc: "Correlate audit review, analysis, and reporting processes for investigation and response to indications of inappropriate, suspicious, or unusual activity." }
-                        ]
+                        compliance: [{ id: "AU.L2-3.3.1", title: "CMMC AU.L2-3.3.1", desc: "Create and retain individual audit records of system access and activity." }]
                     },
                     {
                         id: "7-2",
-                        title: "Policy Enforcement & Escalation Policy",
+                        title: "Policy Enforcement & Escalation",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To define the consequences for violating IT policies and the process for escalation.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>All employees must acknowledge their understanding of the SOP manual annually via e-signature.</li>
-                                <li>Violations of IT policies will result in disciplinary action, in alignment with HR policies, up to and including termination of employment.</li>
-                            </ul>
-                            <h4>Policy Violation Escalation Flow</h4>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To define the consequences for violating IT policies and the process for escalation.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>Supervisors:</strong> Report suspected noncompliance or unsafe behavior from their team members.</li>
+                                    <li><strong>HR & Compliance:</strong> Lead internal investigations and enforce disciplinary steps.</li>
+                                    <li><strong>Legal:</strong> Reviews serious breaches that may involve contracts or external obligations.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
                              <div class="flowchart">
-                                <div class="flowchart-io"><span>Policy Violation Detected</span></div>
+                                <div class="flowchart-io"><span>Policy Violation Detected/Reported</span></div>
                                 <div class="flowchart-arrow"></div>
                                 <div class="flowchart-node"><span>Initial Investigation by Manager/IT</span></div>
                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-decision"><span>Severity Assessment (Minor, Moderate, or Severe)</span></div>
+                                <div class="flowchart-decision"><span>Severity Assessed (Minor, Moderate, or Severe)</span></div>
                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Disciplinary Action w/ HR</span></div>
+                                <div class="flowchart-node"><span>Progressive Disciplinary Action with HR</span></div>
                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Resolution</span></div>
+                                <div class="flowchart-io"><span>Case Documented & Closed</span></div>
                             </div>
                         `,
-                        compliance: [
-                            { id: "AT.L2-3.2.1", title: "CMMC AT.L2-3.2.1", desc: "Ensure users are aware of policies and the security risks of their activities." }
-                        ]
+                        compliance: [{ id: "AT.L2-3.2.1", title: "CMMC AT.L2-3.2.1", desc: "Ensure users are aware of policies and the consequences of non-compliance." }]
                     }
                 ] 
             },
@@ -694,50 +842,69 @@
                 policies: [
                     {
                         id: "8-1",
-                        title: "Procurement & Approval Policy",
+                        title: "Procurement & Vendor Approval",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To ensure all IT-related procurements are approved, secure, and provide value to MVL.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>No employee may acquire, install, or use any software or external service for business purposes without formal approval.</li>
-                                <li>All requests must be submitted via a purchase requisition.</li>
-                                <li>All requests for software or SaaS platforms require a security and compliance review by the IT Security and Legal departments.</li>
-                            </ul>
-                             <h4>Procurement Approval Flow</h4>
+                           <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To ensure all IT-related procurements and third-party vendors are approved, secure, and provide value to MVL.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>Department Heads:</strong> Initiate purchase requests based on operational needs.</li>
+                                    <li><strong>IT & Procurement:</strong> Validate technical specs, check compatibility, and assess vendor risk.</li>
+                                    <li><strong>Finance & Executive Management:</strong> Approve purchases over pre-set thresholds.</li>
+                                    <li><strong>Legal & Compliance:</strong> Review contracts and vet vendors handling sensitive data.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
                              <div class="flowchart">
-                                <div class="flowchart-io"><span>Employee Submits Purchase Requisition</span></div>
+                                <div class="flowchart-io"><span>Employee/Manager Submits Purchase Requisition</span></div>
                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Manager Approval</span></div>
+                                <div class="flowchart-decision"><span>Is this a new Vendor or SaaS tool?</span></div>
                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-decision"><span>Is it software/SaaS? Requires Security & Legal Review?</span></div>
+                                <div class="flowchart-node"><span>IT Security & Legal Vetting</span></div>
                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-node"><span>Procurement Dept. Review & Purchase</span></div>
+                                <div class="flowchart-node"><span>Procurement & Finance Review</span></div>
                                 <div class="flowchart-arrow"></div>
-                                <div class="flowchart-io"><span>Asset Recorded in ITMS</span></div>
+                                <div class="flowchart-io"><span>Approved & Purchased</span></div>
                             </div>
                         `,
-                        compliance: [
-                            { id: "SA.L2-3.12.3", title: "CMMC SA.L2-3.12.3", desc: "Manage the security of systems and services that are outsourced or provided by third parties." }
-                        ]
+                        compliance: [{ id: "SA.L2-3.12.3", title: "CMMC SA.L2-3.12.3", desc: "Manage the security of systems and services that are outsourced." }]
                     },
                     {
                         id: "8-2",
-                        title: "Asset Management Policy",
+                        title: "Asset Management & Lifecycle",
                         content: `
-                            <h4>Purpose</h4>
-                            <p>To track and manage all IT assets throughout their lifecycle, from procurement to disposal.</p>
-                            <h4>Policy Statements</h4>
-                            <ul>
-                                <li>All IT assets are tracked in an IT Asset Management System (ITMS).</li>
-                                <li>Hardware is tagged upon receipt. Software licenses are recorded and audited annually.</li>
-                                <li>At end-of-life, all storage media must be securely sanitized (wiped or destroyed) to ensure no data can be recovered before disposal.</li>
-                            </ul>
+                           <div class="policy-section">
+                                <div class="policy-section-title">Purpose</div>
+                                <p>To track and manage all IT assets throughout their lifecycle, from procurement to disposal, ensuring compliance and security.</p>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Who Does What</div>
+                                <ul>
+                                    <li><strong>IT Asset Coordinator:</strong> Tags, registers, and maintains records of all devices and software licenses.</li>
+                                    <li><strong>Managers:</strong> Ensure assets are used properly and returned when staff exit.</li>
+                                    <li><strong>Finance:</strong> Reconciles inventory with depreciation and budgeting.</li>
+                                </ul>
+                            </div>
+                            <div class="policy-section">
+                                <div class="policy-section-title">Process Flow</div>
+                                <div class="flowchart">
+                                    <div class="flowchart-io"><span>Asset Procured (Hardware or Software)</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Register in Asset Management System (ITMS)</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Deploy to User/System</span></div>
+                                    <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-node"><span>Maintain/Update Through Lifecycle</span></div>
+                                     <div class="flowchart-arrow"></div>
+                                    <div class="flowchart-io"><span>Retire & Securely Dispose/Wipe Data</span></div>
+                                </div>
+                            </div>
                         `,
-                        compliance: [
-                            { id: "CM.L2-3.4.1", title: "CMMC CM.L2-3.4.1", desc: "Establish and maintain baseline configurations and inventories of organizational systems (including hardware, software, firmware, and documentation) throughout the respective system development life cycles." },
-                            { id: "MP.L2-3.8.4", title: "CMMC MP.L2-3.8.4", desc: "Sanitize or destroy system media containing Federal Contract Information and CUI before disposal or release for reuse." }
-                        ]
+                        compliance: [{ id: "CM.L2-3.4.1", desc: "Establish and maintain baseline configurations and inventories of organizational systems.", title: "CMMC CM.L2-3.4.1" }]
                     }
                 ]
             }
@@ -784,7 +951,7 @@
                     `;
                     renderSopChart();
                 } else if (appState.category === 'glossary') {
-                    let termsHtml = data.terms.map(item => `
+                    let termsHtml = data.terms.sort((a,b) => a.term.localeCompare(b.term)).map(item => `
                         <div class="bg-white p-4 rounded-lg border border-slate-200">
                             <dt class="font-semibold text-slate-900">${item.term}</dt>
                             <dd class="mt-1 text-slate-600">${item.def}</dd>
@@ -824,8 +991,8 @@
                                 </aside>
                                 <div id="policy-content" class="mt-8 lg:mt-0 lg:col-span-9">
                                     <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
-                                        <h3 class="text-2xl font-semibold text-slate-800">${activePolicy.title}</h3>
-                                        <div class="mt-4 prose prose-custom">${activePolicy.content}</div>
+                                        <h2 class="text-2xl font-bold text-slate-800 mb-6">${activePolicy.title}</h2>
+                                        <div class="prose prose-custom">${activePolicy.content}</div>
                                         ${complianceHtml ? `<div class="mt-8 border-t border-slate-200 pt-6">
                                             <h4 class="text-sm font-semibold text-slate-600 mb-3">Relevant Compliance Controls</h4>
                                             <div class="flex flex-wrap gap-2">${complianceHtml}</div>
@@ -881,8 +1048,9 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        indexAxis: 'y',
                         scales: {
-                            y: {
+                            x: {
                                 beginAtZero: true,
                                 ticks: {
                                     stepSize: 1
@@ -895,7 +1063,7 @@
                             },
                             tooltip: {
                                 callbacks: {
-                                    title: (context) => context[0].label.split('. ')[1]
+                                    title: (context) => context[0].label
                                 }
                             }
                         },
@@ -961,4 +1129,4 @@
         });
     </script>
 </body>
-</ht
+</html>
