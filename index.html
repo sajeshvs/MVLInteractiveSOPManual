@@ -4,45 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MVL Interactive SOP Manual</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts (Inter & Montserrat) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Chosen Palette: Professional Gradients (Teal, Blue, Slate) -->
-    <!-- Application Structure Plan: Gen-Z friendly SPA. Mobile-first, dark mode, searchable. Onboarding modal (1-time). Home page with gradient logo & chart navigation. Main nav with Home/Glossary/Dark Mode toggle. Glossary is a searchable grid. Policy pages use a 2-col layout with icon-based, color-coded, interactive flowcharts. This structure prioritizes engagement, visual learning, and quick information retrieval over a traditional document format. -->
-    <!-- Visualization & Content Choices: Report Info: 8 main categories -> Goal: Navigate/Explore -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Click bar to navigate -> Justification: Modern, visually appealing way to represent top-level structure. Report Info: Process Flows -> Goal: Explain Process -> Viz: Custom HTML/CSS "Subway Map" Style Flow -> Interaction: Hover for tooltips, visual branching -> Justification: Transforms dense text into an engaging, easy-to-follow visual journey, using icons and color to convey meaning, per prompt. Report Info: Glossary Terms -> Goal: Organize/Find -> Viz: Searchable CSS Grid -> Interaction: Live text search filter -> Justification: Fast, modern alternative to a static list. Report Info: Compliance Controls -> Goal: Inform -> Viz: Clickable Tags -> Interaction: Opens modal with details -> Justification: Keeps UI clean while providing layered, on-demand information. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
     <style>
+        /* This style block contains custom configurations for fonts, colors,
+         * dark mode, and the specific MVL logo design as requested.
+         */
         :root {
-            --bg-light: #f1f5f9; /* slate-100 */
-            --bg-dark: #0f172a; /* slate-900 */
-            --text-light: #0f172a; /* slate-900 */
-            --text-dark: #e2e8f0; /* slate-200 */
-            --card-light: #ffffff;
-            --card-dark: #1e293b; /* slate-800 */
-            --border-light: #e2e8f0; /* slate-200 */
-            --border-dark: #334155; /* slate-700 */
+            /* Light Theme Variables */
+            --bg-color: #F4F7FA;
+            --text-color-primary: #1A202C; /* near-black */
+            --text-color-secondary: #4A5568; /* mid-grey */
+            --headline-color: #32b7e7; /* strong blue */
+            --card-bg: #FFFFFF;
+            --subtle-border: #E2E8F0;
             --accent-gradient: linear-gradient(to right, #14b8a6, #3b82f6); /* Teal to Blue */
+
+
+            /* Font Families */
+            --font-body: 'Inter', sans-serif;
+            --font-headline: 'Montserrat', sans-serif;
         }
+
         html.dark {
-            color-scheme: dark;
-            --bg-light: #0f172a;
-            --bg-dark: #f1f5f9;
-            --text-light: #e2e8f0;
-            --text-dark: #0f172a;
-            --card-light: #1e293b;
-            --card-dark: #ffffff;
-            --border-light: #334155;
-            --border-dark: #e2e8f0;
+            /* Dark Theme Variables */
+            --bg-color: #1A202C;
+            --text-color-primary: #E2E8F0; /* light-grey */
+            --text-color-secondary: #A0AEC0;
+            --headline-color: #32b7e7;
+            --card-bg: #2D3748;
+            --subtle-border: #4A5568;
         }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-light);
+            background-color: var(--bg-color);
+            color: var(--text-color-secondary);
+            font-family: var(--font-body);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+        
         .gradient-text {
             background: var(--accent-gradient);
             -webkit-background-clip: text;
@@ -50,13 +61,26 @@
             background-clip: text;
             color: transparent;
         }
-        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; max-height: 60vh; }
+        
         .active-nav { background-image: var(--accent-gradient); color: white !important; }
+        
+        /* Custom styles for the MVL logo */
+        .mvl-logo { display: flex; align-items: center; gap: 12px; }
+        .mvl-bars { display: flex; flex-direction: column; gap: 4px; }
+        .mvl-bar { width: 32px; height: 6px; border-radius: 2px; }
+        .mvl-text {
+            font-family: var(--font-headline);
+            font-weight: 900;
+            font-size: 2.25rem; /* 36px */
+            line-height: 1;
+            color: #4A5568;
+        }
+        html.dark .mvl-text { color: #E2E8F0; }
 
-        /* Process Flowchart Styles */
+        /* Flowchart Styles */
         .flowchart-wrapper { overflow-x: auto; padding-bottom: 1rem; display: flex; justify-content: center; }
         .flowchart-container { display: inline-flex; flex-direction: column; gap: 0; align-items: center; min-width: max-content; padding: 1rem; }
-        .flowchart-step { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid var(--border-light); background-color: var(--card-light); width: 280px; position: relative; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0; }
+        .flowchart-step { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid var(--subtle-border); background-color: var(--card-bg); width: 280px; position: relative; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0; }
         .flowchart-step:hover { transform: scale(1.03); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1); }
         .flowchart-icon { display: flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border-radius: 9999px; color: white; }
         .flowchart-step-io .flowchart-icon { background-color: #3b82f6; } 
@@ -65,16 +89,16 @@
         .flowchart-step-start .flowchart-icon { background-color: #22c55e; }
         .flowchart-step-end .flowchart-icon { background-color: #ef4444; } 
         
-        .flowchart-connector { width: 2px; height: 2rem; background-color: var(--border-light); position: relative; }
-        .flowchart-connector::after { content: '▼'; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); color: var(--border-light); }
+        .flowchart-connector { width: 2px; height: 2rem; background-color: var(--subtle-border); position: relative; }
+        .flowchart-connector::after { content: '▼'; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); color: var(--subtle-border); }
         
         .flowchart-branch-container { display: flex; flex-direction: column; align-items: center; position: relative; padding: 2rem 0; }
-        .flowchart-branch-container::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 2rem; background-color: var(--border-light); transform: translateX(-50%); }
+        .flowchart-branch-container::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 2rem; background-color: var(--subtle-border); transform: translateX(-50%); }
         .flowchart-step-decision { margin-bottom: 2rem; }
         .flowchart-branch-paths { display: flex; justify-content: center; width: 100%; gap: 4rem; position: relative; }
-        .flowchart-branch-paths::before { content: ''; position: absolute; top: -2rem; left: 50%; width: calc(100% - 280px - 4rem); height: 2px; background-color: var(--border-light); transform: translateX(-50%); }
+        .flowchart-branch-paths::before { content: ''; position: absolute; top: -2rem; left: 50%; width: calc(100% - 280px - 4rem); height: 2px; background-color: var(--subtle-border); transform: translateX(-50%); }
         .flowchart-branch-path { display: flex; flex-direction: column; align-items: center; gap: 1rem; position: relative; }
-        .flowchart-branch-path::before { content: ''; position: absolute; top: -2rem; left: 50%; width: 2px; height: 2rem; background-color: var(--border-light); transform: translateX(-50%); }
+        .flowchart-branch-path::before { content: ''; position: absolute; top: -2rem; left: 50%; width: 2px; height: 2rem; background-color: var(--subtle-border); transform: translateX(-50%); }
         .branch-label { position: absolute; top: -3.5rem; font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
         .branch-label.yes { background-color: #dcfce7; color: #166534; } 
         .branch-label.no { background-color: #fee2e2; color: #991b1b; } 
@@ -82,24 +106,17 @@
         .tooltip { visibility: hidden; width: max-content; max-width: 250px; background-color: #111827; color: #fff; text-align: center; border-radius: 6px; padding: 8px 12px; position: absolute; z-index: 10; bottom: 125%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s; font-size: 0.875rem; pointer-events: none;}
         .flowchart-step:hover .tooltip { visibility: visible; opacity: 1; }
         
-        .policy-section-divider { border-color: var(--border-light); margin-top: 1.5rem; margin-bottom: 1.5rem; }
-
-        /* Logo Styles */
-        .header-logo-container { display: flex; align-items: center; gap: 8px; }
-        .header-color-bars { display: flex; flex-direction: column; gap: 2px; }
-        .header-bar { width: 14px; height: 7px; border-radius: 1px; }
-        .bar-1 { background-color: #9b9b9b; } .bar-2 { background-color: #ba2226; } .bar-3 { background-color: #8c2a8e; } .bar-4 { background-color: #92b13f; } .bar-5 { background-color: #e57e33; }
-        .header-logo-text { font-size: 32px; font-weight: 900; line-height: 1; background: linear-gradient(to right, #bdbdbd, #616161); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; letter-spacing: -1.5px; }
+        .policy-section-divider { border-color: var(--subtle-border); margin-top: 1.5rem; margin-bottom: 1.5rem; }
     </style>
 </head>
 <body class="antialiased">
 
     <!-- Onboarding Modal -->
     <div id="onboarding-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-[var(--card-light)] rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform transition-all scale-95 opacity-0">
+        <div class="bg-[var(--card-bg)] rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform transition-all scale-95 opacity-0">
             <h2 class="text-3xl font-black gradient-text mb-4">Welcome to the MVL IT SOP Hub</h2>
-            <p class="text-[var(--text-light)] mb-2">Your one-stop launchpad for every policy, process, and playbook that drives our CMMC v2 / NIST 800-171 Rev 3 program. Browse concise policies, follow interactive workflow charts, and locate any step in a snap.</p>
-            <p class="text-[var(--text-light)] mb-6">Jump in and explore.</p>
+            <p class="text-[var(--text-color-primary)] dark:text-[var(--text-color-secondary)] mb-2">Your one-stop launchpad for every policy, process, and playbook that drives our CMMC v2 / NIST 800-171 Rev 3 program. Browse concise policies, follow interactive workflow charts, and locate any step in a snap.</p>
+            <p class="text-[var(--text-color-secondary)] mb-6">Jump in and explore.</p>
             <button id="close-onboarding" class="text-white font-bold py-3 px-6 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 hover:opacity-90 transition-opacity">Let's Go!</button>
         </div>
     </div>
@@ -108,7 +125,7 @@
     <div id="search-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-[var(--card-light)] rounded-2xl shadow-2xl max-w-2xl w-full max-h-[70vh] flex flex-col transform transition-all scale-95 opacity-0">
              <div class="p-4 border-b border-[var(--border-light)] flex justify-between items-center">
-                <h3 class="text-lg font-bold text-[var(--text-light)]">Search Policies & Terms</h3>
+                <h3 class="text-lg font-bold text-[var(--text-color-primary)]">Search Policies & Terms</h3>
                 <button id="close-search" class="text-slate-400 hover:text-slate-600"><i class="material-icons">close</i></button>
             </div>
             <div class="p-4">
@@ -119,40 +136,50 @@
     </div>
 
     <div id="app" class="min-h-screen flex flex-col">
-        <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
+        <!-- Header/Navbar -->
+        <header class="w-full bg-[var(--card-bg)]/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-[var(--subtle-border)]">
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center space-x-3 cursor-pointer" id="home-button">
-                        <div class="header-logo-container">
-                            <div class="header-color-bars">
-                                <div class="header-bar bar-1"></div><div class="header-bar bar-2"></div><div class="header-bar bar-3"></div><div class="header-bar bar-4"></div><div class="header-bar bar-5"></div>
-                            </div>
-                            <div class="header-logo-text">MVL</div>
+                <div class="flex justify-between items-center h-20">
+                    <!-- MVL Logo -->
+                    <div class="mvl-logo cursor-pointer" id="home-button">
+                        <div class="mvl-bars">
+                            <div class="mvl-bar" style="background-color: #9b9b9b;"></div>
+                            <div class="mvl-bar" style="background-color: #ba2226;"></div>
+                            <div class="mvl-bar" style="background-color: #8c2a8e;"></div>
+                            <div class="mvl-bar" style="background-color: #92b13f;"></div>
+                            <div class="mvl-bar" style="background-color: #e57e33;"></div>
                         </div>
+                        <span class="mvl-text">MVL</span>
                     </div>
-                    <div class="hidden md:flex items-center space-x-2 relative">
-                        <button id="open-menu" class="main-nav-link px-4 py-2 rounded-full text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><i class="material-icons text-base">menu_book</i> Explore</button>
-                        <a href="#" class="main-nav-link px-4 py-2 rounded-full text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800" data-content="glossary">Glossary</a>
-                        <button id="dark-mode-toggle" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+
+                    <!-- Navigation Links -->
+                    <div class="hidden md:flex items-center space-x-4 relative">
+                        <button id="open-menu" class="main-nav-link font-semibold text-gray-600 dark:text-gray-300 hover:text-[var(--headline-color)] transition-colors flex items-center gap-1">
+                            <i class="material-icons text-lg">menu_book</i>
+                            Explore
+                        </button>
+                         <a href="#" class="main-nav-link font-semibold text-gray-600 dark:text-gray-300 hover:text-[var(--headline-color)] transition-colors" data-content="glossary">Glossary</a>
+                        <button id="dark-mode-toggle" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                             <i class="material-icons text-xl align-middle">light_mode</i>
                         </button>
-                        <!-- Explore Menu Popover -->
-                        <div id="explore-menu" class="hidden absolute top-full mt-2 w-72 bg-[var(--card-light)] rounded-xl shadow-lg border border-[var(--border-light)] p-2 z-50">
+                         <!-- Explore Menu Popover -->
+                        <div id="explore-menu" class="hidden absolute top-full mt-2 w-72 bg-[var(--card-bg)] rounded-xl shadow-lg border border-[var(--subtle-border)] p-2 z-50">
                             <!-- Popover content injected here -->
                         </div>
                     </div>
-                     <div class="md:hidden">
-                        <button id="mobile-menu-button" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" class="p-2 rounded-full text-gray-500 dark:text-gray-400">
                             <i class="material-icons">menu</i>
                         </button>
                     </div>
                 </div>
                  <div class="md:hidden hidden" id="mobile-menu">
                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800" data-content="intro">Home</a>
                          <div id="mobile-explore-menu" class="space-y-1"></div>
-                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800" data-content="glossary">Glossary</a>
-                         <button id="dark-mode-toggle-mobile" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                        <a href="#" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200" data-content="glossary">Glossary</a>
+                         <button id="dark-mode-toggle-mobile" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 flex items-center gap-2">
                            <i class="material-icons text-xl">light_mode</i> Dark Mode
                         </button>
                     </div>
@@ -160,15 +187,10 @@
             </nav>
         </header>
 
+        <!-- Main Content -->
         <main id="main-content" class="flex-grow">
             <!-- Dynamic content will be injected here -->
         </main>
-
-        <footer class="bg-transparent">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 dark:text-slate-400">
-                MVL Interactive SOP Manual v2.0 | Effective Date: 2025-06-09
-            </div>
-        </footer>
     </div>
     
     <!-- Floating Search Button -->
@@ -178,12 +200,12 @@
     
     <!-- Compliance Modal -->
     <div id="compliance-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-[var(--card-light)] rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+        <div class="bg-[var(--card-bg)] rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
             <div class="p-4 border-b border-[var(--border-light)] flex justify-between items-center">
-                 <h3 id="modal-title" class="text-lg font-bold text-[var(--text-light)]">Compliance Control</h3>
-                 <button id="modal-close" class="text-slate-400 hover:text-slate-600"><i class="material-icons">close</i></button>
+                 <h3 id="modal-title" class="text-lg font-bold text-[var(--text-color-primary)]">Compliance Control</h3>
+                 <button id="modal-close" class="text-gray-400 hover:text-gray-600"><i class="material-icons">close</i></button>
             </div>
-            <div id="modal-body" class="p-6 overflow-y-auto text-[var(--text-light)] prose prose-custom"></div>
+            <div id="modal-body" class="p-6 overflow-y-auto text-[var(--text-color-secondary)] prose prose-custom"></div>
         </div>
     </div>
 
@@ -193,18 +215,32 @@
             intro: {
                 title: "Welcome to the MVL Interactive SOP Manual",
                 overview: `
-                    <p class="text-lg text-slate-600 dark:text-slate-300 mb-6">This interactive application transforms MVL's Standard Operating Procedure (SOP) Manual into a dynamic, user-friendly resource. It establishes the official policies, procedures, and guidelines governing the use, management, and security of MVL's information technology (IT) resources.</p>
-                    <p class="text-slate-600 dark:text-slate-400 mb-6">Its purpose is to ensure operational integrity, protect corporate and client data, maintain compliance, and guide employees in the responsible use of technology. We have prioritized concise information and visual flowcharts to make policies easy to understand. Unfamiliar with a term? Visit our comprehensive <strong>Glossary</strong> from the main menu.</p>
-                    <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4">Navigating the Manual</h3>
-                    <p class="text-slate-600 dark:text-slate-400 mb-6">Use the navigation bar above to explore the 8 main policy categories, or click on a bar in the chart below to jump directly to a category. Each section provides detailed policies and interactive diagrams to help you quickly find the information you need.</p>
-                    <div class="chart-container">
-                        <canvas id="sopChart"></canvas>
+                    <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-color-secondary)]">
+                        Manual into a dynamic, user-friendly resource. It establishes the official policies, procedures, and guidelines governing the use, management, and security of MVL's information technology (IT) resources.
+                    </p>
+                    <p class="mt-4 max-w-2xl mx-auto text-base text-gray-500 dark:text-gray-400">
+                        Its purpose is to ensure operational integrity, protect corporate and client data, maintain compliance, and guide employees in the responsible use of technology. We have prioritized concise information and visual flowcharts to make policies easy to understand. Unfamiliar with a term? Visit our comprehensive Glossary from the main menu.
+                    </p>
+                `,
+                navigating: `
+                    <div class="mt-12">
+                        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-color-primary)]" style="font-family: var(--font-headline);">
+                            Navigating the Manual
+                        </h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-lg text-[var(--text-color-secondary)]">
+                            Use the navigation bar above to explore the 8 main policy categories, or click on a bar in the chart below to jump directly to a category. Each section provides detailed policies and interactive diagrams to help you quickly find the information you need.
+                        </p>
+                        <div class="mt-8 bg-[var(--card-bg)] rounded-xl shadow-md border border-[var(--subtle-border)] p-4 sm:p-6">
+                            <div class="relative h-96 w-full">
+                                <canvas id="sopCategoryChart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 `
             },
             glossary: {
                 title: "Consolidated Glossary of Terms",
-                overview: `<p class="text-slate-600 dark:text-slate-400 mb-6">This glossary provides definitions for key terms and acronyms used throughout the SOP manual to ensure a common understanding. Use the search bar to filter terms.</p>`,
+                overview: `<p class="text-[var(--text-color-secondary)] mb-6">This glossary provides definitions for key terms and acronyms used throughout the SOP manual to ensure a common understanding. Use the search bar to filter terms.</p>`,
                 terms: [
                     { term: "Asset", def: "Any MVL-owned hardware, software, system, service, or information." },
                     { term: "BYOD", def: "Bring Your Own Device: The practice of using a personally owned device to access company information and systems." },
@@ -736,7 +772,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const mainContent = document.getElementById('main-content');
-            const navLinks = document.querySelectorAll('.main-nav-link');
             const modal = document.getElementById('compliance-modal');
             const modalClose = document.getElementById('modal-close');
             const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -760,8 +795,8 @@
             const darkModeToggleMobile = document.getElementById('dark-mode-toggle-mobile');
             const toggleIcons = () => {
                  const isDark = document.documentElement.classList.contains('dark');
-                 darkModeToggle.innerHTML = `<i class="material-icons text-xl align-middle">${isDark ? 'dark_mode' : 'light_mode'}</i>`;
-                 darkModeToggleMobile.innerHTML = `<i class="material-icons text-xl">${isDark ? 'dark_mode' : 'light_mode'}</i> Dark Mode`;
+                 if(darkModeToggle) darkModeToggle.innerHTML = `<i class="material-icons text-xl align-middle">${isDark ? 'dark_mode' : 'light_mode'}</i>`;
+                 if(darkModeToggleMobile) darkModeToggleMobile.innerHTML = `<i class="material-icons text-xl">${isDark ? 'dark_mode' : 'light_mode'}</i> Dark Mode`;
             };
             if (localStorage.getItem('darkMode') === 'enabled') {
                 document.documentElement.classList.add('dark');
@@ -824,7 +859,7 @@
             });
             
             document.addEventListener('click', (e) => {
-                if (!menuPopover.contains(e.target) && !openMenuBtn.contains(e.target)) {
+                if (menuPopover && openMenuBtn && !menuPopover.contains(e.target) && !openMenuBtn.contains(e.target)) {
                     menuPopover.classList.add('hidden');
                 }
             });
@@ -854,7 +889,7 @@
                 searchModal.classList.add('flex');
                 setTimeout(() => { 
                     searchModal.querySelector('div').classList.remove('scale-95', 'opacity-0');
-                    searchInput.focus();
+                    if(searchInput) searchInput.focus();
                 }, 50);
             }
             
@@ -883,7 +918,7 @@
 
                 searchResultsContainer.innerHTML = results.map(r => `
                     <div class="search-result-item p-3 rounded-lg hover:bg-[var(--bg-light)] cursor-pointer" data-id="${r.id || r.term}" data-type="${r.type}">
-                        <div class="font-bold text-[var(--text-light)]">${r.title}</div>
+                        <div class="font-bold text-[var(--text-color-primary)]">${r.title}</div>
                         <div class="text-xs text-slate-500">${r.type}${r.category ? ` / ${r.category}` : ''}</div>
                     </div>
                 `).join('') || `<p class="text-slate-500 p-3">No results found.</p>`;
@@ -928,17 +963,21 @@
                 }
 
                 if (appState.category === 'intro') {
-                    mainContent.innerHTML = `<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8"><h2 class="text-3xl lg:text-5xl font-black gradient-text text-center">${data.title}</h2><div class="mt-8 text-center max-w-3xl mx-auto prose prose-custom">${data.overview}</div></div>`;
+                    mainContent.innerHTML = `<div class="max-w-4xl mx-auto py-8 sm:py-12 lg:py-16 px-4 sm:px-6 text-center">
+                        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight" style="font-family: var(--font-headline); color: var(--headline-color);">${data.title}</h1>
+                        ${data.overview}
+                        ${data.navigating}
+                    </div>`;
                     renderSopChart();
                 } else if (appState.category === 'glossary') {
                     let termsHtml = data.terms.sort((a,b) => a.term.localeCompare(b.term)).map(item => `
-                        <div id="term-${item.term.replace(/\s+/g, '-')}" class="bg-[var(--card-light)] p-4 rounded-xl border border-[var(--border-light)]">
-                            <dt class="font-bold text-slate-800 dark:text-slate-100">${item.term}</dt>
+                        <div id="term-${item.term.replace(/\s+/g, '-')}" class="bg-[var(--card-bg)] p-4 rounded-xl border border-[var(--subtle-border)]">
+                            <dt class="font-bold text-[var(--text-color-primary)]">${item.term}</dt>
                             <dd class="mt-1 text-slate-600 dark:text-slate-300">${item.def}</dd>
                         </div>
                     `).join('');
                     mainContent.innerHTML = `
-                        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-7xl mx-auto py-8 lg:py-12 px-4 sm:px-6 lg:px-8">
                              <h2 class="text-3xl lg:text-4xl font-black gradient-text">${data.title}</h2>
                              <div class="mt-4 prose prose-custom">${data.overview}</div>
                              <input id="glossary-search" type="text" placeholder="Filter terms..." class="w-full p-3 my-6 rounded-lg bg-[var(--bg-light)] border border-[var(--border-light)] focus:ring-2 focus:ring-teal-500 outline-none">
@@ -960,15 +999,15 @@
                     const complianceHtml = activePolicy.compliance ? activePolicy.compliance.map(c => `<button class="compliance-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800 hover:bg-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:hover:bg-teal-800" data-control-id="${c.id}">${c.title}</button>`).join('') : '';
 
                     mainContent.innerHTML = `
-                        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                            <div class="text-center"><h2 class="text-3xl lg:text-4xl font-black gradient-text">${data.title}</h2><p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-300">${data.overview}</p></div>
+                        <div class="max-w-7xl mx-auto py-8 lg:py-12 px-4 sm:px-6 lg:px-8">
+                            <div class="text-center"><h2 class="text-3xl lg:text-4xl font-black gradient-text">${data.title}</h2><p class="mt-4 max-w-2xl mx-auto text-lg text-[var(--text-color-secondary)]">${data.overview}</p></div>
                             <div class="mt-12 lg:grid lg:grid-cols-12 lg:gap-8">
                                 <aside class="lg:col-span-3 mb-8 lg:mb-0"><nav class="space-y-1 sticky top-24"><ul id="sub-nav">${policyNavHtml}</ul></nav></aside>
                                 <div id="policy-content" class="lg:col-span-9">
-                                    <article class="bg-[var(--card-light)] rounded-2xl shadow-lg border border-[var(--border-light)] p-6 md:p-8">
-                                        <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">${activePolicy.title}</h2>
-                                        <div class="prose prose-custom text-[var(--text-light)]">${activePolicy.content}</div>
-                                        ${complianceHtml ? `<div class="mt-8 border-t border-[var(--border-light)] pt-6"><h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-3">Relevant Compliance Controls</h4><div class="flex flex-wrap gap-2">${complianceHtml}</div></div>` : ''}
+                                    <article class="bg-[var(--card-bg)] rounded-2xl shadow-lg border border-[var(--subtle-border)] p-6 md:p-8">
+                                        <h2 class="text-2xl font-bold text-[var(--text-color-primary)] mb-6">${activePolicy.title}</h2>
+                                        <div class="prose prose-custom text-[var(--text-color-secondary)]">${activePolicy.content}</div>
+                                        ${complianceHtml ? `<div class="mt-8 border-t border-[var(--subtle-border)] pt-6"><h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-3">Relevant Compliance Controls</h4><div class="flex flex-wrap gap-2">${complianceHtml}</div></div>` : ''}
                                     </article>
                                 </div>
                             </div>
@@ -995,28 +1034,34 @@
                  document.querySelectorAll('.main-nav-link').forEach(link => {
                      link.classList.remove('active-nav', 'text-white');
                  });
-                 const activeLink = document.querySelector(`.main-nav-link[data-content="${appState.category}"]`);
-                 if(activeLink) {
-                    activeLink.classList.add('active-nav', 'text-white');
+                 const openMenuBtn = document.getElementById('open-menu');
+                 if (openMenuBtn) {
+                    openMenuBtn.classList.remove('active-nav', 'text-white');
+                 }
+
+                 if (appState.category.startsWith('cat')) {
+                    if (openMenuBtn) {
+                        openMenuBtn.classList.add('active-nav', 'text-white');
+                    }
+                 } else {
+                     const activeLink = document.querySelector(`.main-nav-link[data-content="${appState.category}"]`);
+                     if(activeLink) {
+                        activeLink.classList.add('active-nav', 'text-white');
+                     }
                  }
             }
 
 
             function renderSopChart() {
                 const isDark = document.documentElement.classList.contains('dark');
-                const chartContainer = document.getElementById('sopChart');
-                if(Chart.getChart(chartContainer)){ Chart.getChart(chartContainer).destroy(); }
+                const chartContainer = document.getElementById('sopCategoryChart');
+                if(chartContainer && Chart.getChart(chartContainer)){ Chart.getChart(chartContainer).destroy(); }
+                if (!chartContainer) return;
 
                 const categories = Object.keys(sopData).filter(k => k.startsWith('cat'));
                 const colors = [
-                    'rgba(20, 184, 166, 0.7)', // Teal
-                    'rgba(59, 130, 246, 0.7)', // Blue
-                    'rgba(100, 116, 139, 0.7)',// Slate
-                    'rgba(245, 158, 11, 0.7)', // Amber
-                    'rgba(139, 92, 246, 0.7)', // Violet
-                    'rgba(14, 165, 233, 0.7)', // Sky
-                    'rgba(99, 102, 241, 0.7)', // Indigo
-                    'rgba(217, 70, 239, 0.7)'  // Fuchsia
+                    '#92b13f', '#e57e33', '#ba2226', '#8c2a8e', 
+                    '#32b7e7', '#9b9b9b', '#64748b', '#475569'
                 ];
 
                 new Chart(chartContainer.getContext('2d'), {
@@ -1024,17 +1069,46 @@
                     data: {
                         labels: categories.map(c => sopData[c].title),
                         datasets: [{
-                            label: '# of Policies',
+                            label: 'Policy Count',
                             data: categories.map(c => sopData[c].policies.length),
-                            backgroundColor: colors,
-                            borderColor: colors.map(c => c.replace('0.7', '1')),
+                            backgroundColor: colors.map(c => c + 'B3'), // Add alpha for background
+                            borderColor: colors,
                             borderWidth: 1,
+                            borderRadius: 4,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.8
                         }]
                     },
                     options: {
-                        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                        scales: { x: { beginAtZero: true, grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: isDark ? '#94a3b8' : '#64748b', stepSize: 1 } }, y: { grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: isDark ? '#94a3b8' : '#64748b' } } },
-                        plugins: { legend: { display: false } },
+                        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#1A202C', titleFont: { size: 14, weight: 'bold' }, bodyFont: { size: 12 },
+                                padding: 10, cornerRadius: 6, displayColors: false,
+                                callbacks: { label: (context) => `Policies: ${context.raw}` }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false, drawBorder: false, },
+                                ticks: {
+                                    callback: (value) => (value === 0 ? '0' : ''),
+                                    color: isDark ? '#A0AEC0' : '#4A5568'
+                                }
+                            },
+                            y: {
+                                grid: { display: false, drawBorder: false },
+                                ticks: {
+                                    font: { size: 14, weight: '500' },
+                                    color: isDark ? '#A0AEC0' : '#4A5568',
+                                    crossAlign: 'far', padding: 10
+                                }
+                            }
+                        },
+                        onHover: (event, chartElement) => {
+                            event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+                        },
                         onClick: (event, elements) => {
                             if (elements.length > 0) {
                                 appState.category = categories[elements[0].index];
@@ -1071,16 +1145,18 @@
                 renderContent();
             });
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if(link.dataset.content){
-                        appState.category = link.dataset.content;
-                        appState.policy = null;
-                        renderContent();
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
+            document.querySelectorAll('.main-nav-link').forEach(link => {
+                if (link.id !== 'open-menu' && link.parentElement.id !== 'mobile-explore-menu') { 
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if(link.dataset.content){
+                            appState.category = link.dataset.content;
+                            appState.policy = null;
+                            renderContent();
+                            if (mobileMenu) mobileMenu.classList.add('hidden');
+                        }
+                    });
+                }
             });
             
             modalClose.addEventListener('click', () => { modal.classList.add('hidden'); modal.classList.remove('flex'); });
